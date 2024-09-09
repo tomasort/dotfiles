@@ -1,0 +1,11 @@
+# Use Vi key bindings
+set editing-mode vi
+
+# Common keybindings
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\C-p": history-search-backward
+"\C-n": history-search-forward
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+"\C-l": clear-screen
