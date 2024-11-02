@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# This script helps manage tmux sessions by creating or switching to a session
+# associated with a directory. It also uses 'fzf' for fuzzy searching if no argument is given.
+
+# Check if exactly one argument was passed
+if [[ $# -eq 1 ]]; then
+    # If an argument is passed, set 'selected' to the argument (a directory path)
+    selected=$1
+else
+    # If no argument is passed, use 'find' to list directories and select one using 'fzf'
+    selected=$(find ~/projects ~/ -mindepth 1 -maxdepth 1 -type d | fzf)
+fi
+
+# If no directory was selected (fzf was cancelled or no input), exit the script
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+# Extract the basename of the selected directory, replacing '.' with '_' for tmux compatibility
+selected_name=$(basename "$selected" | tr . _)
+
+# Check if tmux is running by using 'pgrep' to look for tmux processes
+tmux_running=$(pgrep tmux)
+
+# If you're not already inside tmux ($TMUX is empty) AND tmux is not running, create a new session
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    # Create and attach to a new tmux session with the name 'selected_name' in the 'selected' directory
+    tmux new-session -s $selected_name -c $selected
+    exit 0
+fi
+
+# If a tmux session with the name 'selected_name' does not already exist, create it in detached mode
+# The '2> /dev/null' suppresses any errors (e.g., if the session already exists)
+if ! tmux has-session -t=$selected_name 2> /dev/null; then
+    # Create a new detached session (-d) with the name 'selected_name' in the 'selected' directory
+    tmux new-session -ds $selected_name -c $selected
+fi
+
+echo "tmux is running and has a new session"
+
+if [[ -z $TMUX ]]; then
+    # If you're not already inside tmux, attach to the session with the name 'selected_name'
+    tmux attach-session -t $selected_name
+else
+    # If you're inside tmux, switch to the session with the name 'selected_name'
+    tmux switch-client -t $selected_name
+fi
