@@ -81,8 +81,6 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git web-search vi-mode zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search)
 
-VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -119,11 +117,10 @@ bindkey '^@' autosuggest-accept
 
 # myIP address
 function myip() {
-    ifconfig lo0 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "lo0       : " $2}'
-	ifconfig en0 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "en0 (IPv4): " $2 " " $3 " " $4 " " $5 " " $6}'
-	ifconfig en0 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "en0 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
-	ifconfig en1 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "en1 (IPv4): " $2 " " $3 " " $4 " " $5 " " $6}'
-	ifconfig en1 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "en1 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
+	ifconfig eth0 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "eth0 (IPv4): " $2 " " $3 " " $4 " " $5 " " $6}'
+	ifconfig eth0 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "eth0 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
+	ifconfig wlan0 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "wlan0 (IPv4): " $2 " " $3 " " $4 " " $5 " " $6}'
+	ifconfig wlan0 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "wlan0 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
 }
 
 # Nicer prompt.
@@ -143,9 +140,34 @@ ZSH_WEB_SEARCH_ENGINES=(reddit "https://www.reddit.com/search/?q=")
 # use vim keybinds
 # bindkey -v
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH="$HOME/.local/bin:$PATH"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export PATH="$HOME:$PATH"
+
+bindkey -s ^s "tmux-sessionizer\n"
+
+# alias to source zshrc
+alias sz='source ~/.zshrc'
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# pnpm
+export PNPM_HOME="/home/odroid/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# needed for lazygit
+export PATH="$HOME/go/bin:$PATH"
+
+# alias for nvim
+alias vim='nvim'
