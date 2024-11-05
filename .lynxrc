@@ -1,0 +1,10 @@
+accept_all_cookies=on
+force_ssl_cookies_secure=on
+vi_keys=on
+file_editor=nvim
+show_color=default
+
+show_cursor=on
+verbose_images=on
+visited_links=LAST_REVERSED
+keypad_mode=LINKS_AND_FIELDS_ARE_NUMBERED
