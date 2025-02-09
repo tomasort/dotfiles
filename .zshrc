@@ -171,3 +171,12 @@ export PATH="$HOME/go/bin:$PATH"
 
 # alias for nvim
 alias vim='nvim'
+
+gitr () {
+  for f in $(find . -type d -name .git | awk -F"/.git$" '{print $1}');  do
+    echo
+    echo "................................ (cd $f && git $*) ........................................."
+    echo
+    (cd $f && git $*)
+  done
+}

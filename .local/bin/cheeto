@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+languages=$(echo "go c cpp java matlab python sql swift typescript javascript rust html" | tr ' ' '\n')
+core_utils=$(echo "find grep sed awk sort xargs uniq tar gzip unzip curl wget rsync diff tmux" | tr ' ' '\n')
+selected=$(echo -e "$languages\n$core_utils" | fzf)
+
+# Check if cht.sh is available
+if command -v ~/.local/bin/cht.sh &> /dev/null; then
+    # If cht.sh exists, use it
+    ~/.local/bin/cht.sh --shell "$selected"
+else
+    # Fallback to the old version of the script
+    read -p "Enter query: " query
+    if echo "$languages" | grep -qs "$selected"; then
+        bash -c "curl --no-progress-meter cht.sh/$selected/$(echo "$query" | tr ' ' '+') | less"
+    else
+        bash -c "curl --no-progress-meter cht.sh/$selected~$query | less"
+    fi
+fi
