@@ -180,3 +180,7 @@ gitr () {
     (cd $f && git $*)
   done
 }
+
+
+# source the cargo env
+[ -f ~/.cargo/env ] && source $HOME/.cargo/env
