@@ -1,1 +1,4 @@
 ..*
+.config/gh/hosts.yml
+.config/github-copilot/
+.config/go/
