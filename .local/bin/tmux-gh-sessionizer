@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# This script lists GitHub repositories using 'gh', allows selection via 'fzf',
+# clones the selected repo, and starts a tmux session in the cloned directory.
+
+# Fetch repository list and allow the user to select one
+selected_repo=$(gh repo list -L 100 --json nameWithOwner --jq '.[].nameWithOwner' | fzf)
+
+# Exit if no repository was selected
+if [[ -z $selected_repo ]]; then
+    echo "No repository selected. Exiting."
+    exit 0
+fi
+
+# Clone the repository into the home directory
+repo_name=$(basename "$selected_repo")
+repo_dir="$HOME/$repo_name"
+
+if [[ -d $repo_dir ]]; then
+    echo "Repository already exists locally. Switching to the directory."
+else
+    echo "Cloning $selected_repo..."
+    gh repo clone "$selected_repo" "$repo_dir"
+fi
+
+# Ensure the directory exists
+if [[ ! -d $repo_dir ]]; then
+    echo "Error: Cloning failed or directory does not exist."
+    exit 1
+fi
+
+# Format a tmux-friendly session name
+session_name=$(basename "$repo_name" | tr . _)
+
+# Check if tmux is running
+tmux_running=$(pgrep tmux)
+
+# If tmux is not running and we're not inside a session, start a new one
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s "$session_name" -c "$repo_dir"
+    exit 0
+fi
+
+# If the session does not already exist, create it in detached mode
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+    tmux new-session -ds "$session_name" -c "$repo_dir"
+fi
+
+# Attach or switch to the tmux session
+if [[ -z $TMUX ]]; then
+    tmux attach-session -t "$session_name"
+else
+    tmux switch-client -t "$session_name"
+fi

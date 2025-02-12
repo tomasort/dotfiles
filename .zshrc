@@ -153,6 +153,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME:$PATH"
 
 bindkey -s ^s "tmux-sessionizer\n"
+bindkey -s ^g "tmux-gh-sessionizer\n"
 
 # alias to source zshrc
 alias sz='source ~/.zshrc'
