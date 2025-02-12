@@ -90,6 +90,7 @@ nnoremap <leader>v :vsplit<CR>
 
 " TMUX Scripts from vim
 nnoremap <silent> <C-s> :silent !tmux neww tmux-sessionizer<CR>
+nnoremap <silent> <C-g> :silent !tmux neww tmux-gh-sessionizer<CR>
 
 " ch script
 " nnoremap <silent> <leader>ch :silent !tmux split-window -h cheeto<CR>
