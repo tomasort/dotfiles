@@ -29,3 +29,6 @@ fi
 # Created by `pipx` on 2024-07-16 04:50:32
 export PATH="$PATH:/home/odroid/.local/bin"
 . "$HOME/.cargo/env"
+
+# Created by `pipx` on 2025-02-11 15:27:51
+export PATH="$PATH:/home/tomasortega/.local/bin"
