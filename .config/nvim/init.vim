@@ -253,6 +253,11 @@ Plug 'christoomey/vim-tmux-navigator'
 " LATEX
 Plug 'lervag/vimtex'
 
+Plug 'nvzone/typr'
+Plug 'nvzone/volt'
+Plug 'lukas-reineke/indent-blankline.nvim'
+
+
 call plug#end()
 "
 " ------------------------------------
@@ -294,6 +299,7 @@ require('tel')
 require('ts')
 require('lsp')
 require('yaml_fix')
+require("ibl").setup({ indent = {char = "▏",}})
 
 require('CopilotChat').setup({})
 
