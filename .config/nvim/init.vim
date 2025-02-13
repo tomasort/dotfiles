@@ -247,6 +247,8 @@ Plug 'zbirenbaum/copilot.lua'
 " https://github.com/yetone/avante.nvim
 
 
+Plug 'christoomey/vim-tmux-navigator'
+
 
 " LATEX
 Plug 'lervag/vimtex'
