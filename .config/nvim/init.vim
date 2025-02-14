@@ -26,6 +26,12 @@ set hls ic
 set updatetime=50
 set splitright
 set signcolumn=yes
+set breakindent
+set lazyredraw
+
+" NetRW
+let g:netrw_liststyle = 1    
+let g:netrw_sort_by = 'exten'  " Case-insensitive sorting by name
 
 
 " set foldmethod=expr
@@ -270,7 +276,7 @@ let ayucolor="dark"   " for dark version of theme
 " I didn't like the color of the line numbers, 
 " and some other keywords because they were too dark
 exe "hi! LineNr guifg=#4d5c6d guibg=NONE gui=NONE" 
-exe "hi! NonText guifg=#4d5c6d guibg=NONE gui=NONE" 
+exe "hi! NonText guifg=#2b3446 guibg=NONE gui=NONE" 
 exe "hi! SpecialKey guifg=#4d5c6d guibg=NONE gui=NONE" 
 exe "hi! Directory guifg=#707c8a guibg=NONE gui=NONE" 
 
@@ -299,7 +305,55 @@ require('tel')
 require('ts')
 require('lsp')
 require('yaml_fix')
-require("ibl").setup({ indent = {char = "▏",}})
+
+-- vim.opt.list = true
+-- vim.opt.listchars = { lead = '·', tab = '|·' }
+
+local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
+}
+
+local hooks = require "ibl.hooks"
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+end)
+vim.g.rainbow_delimiters = { highlight = highlight }
+require("ibl").setup({
+    indent = {
+        char = "▏",
+    },
+    scope = {
+        enabled = false,
+        show_end = false,
+        highlight = highlight,
+        include = {
+            node_type = { 
+                python = {"class_definition", "function_definition", "for_statement", "while_statement", "if_statement", "try_statement", "with_statement"},
+                javascript = {"class_definition", "function_definition", "for_statement", "while_statement", "if_statement", "try_statement", "return_statement"},
+                typescript = {"class_definition", "function_definition", "for_statement", "while_statement", "if_statement", "try_statement", "return_statement"},
+                html = {"tag"},
+                yaml = {"block"},
+                lua = {"function_definition", "for_statement", "while_statement", "if_statement", "try_statement", "return_statement", "table_constructor"},
+            },
+        }
+    },
+})
+
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+
+
 
 require('CopilotChat').setup({})
 
