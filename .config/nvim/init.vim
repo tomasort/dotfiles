@@ -38,7 +38,7 @@ let g:netrw_sort_by = 'exten'  " Case-insensitive sorting by name
 " set foldexpr=nvim_treesitter#foldexpr()
 autocmd BufReadPost,FileReadPost * normal zR
 set foldmethod=indent
-set foldnestmax=1
+set foldnestmax=2
 set foldlevelstart=99
 
 filetype on             " enable filetype detection
@@ -110,10 +110,10 @@ vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
 " remaps to quickly paste from the system clipboard
-vnoremap <leader>p "+p
-nnoremap <leader>p "+p
-vnoremap <leader>y "+y
-nnoremap <leader>y "+y
+vnoremap <leader>pp "+p
+nnoremap <leader>pp "+p
+vnoremap <leader>yy "+y
+nnoremap <leader>yy "+y
 
 " easily enter into window mode
 nnoremap <leader>w <C-w>
@@ -172,7 +172,7 @@ nnoremap <leader>gg :LazyGit<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 
 " Copilot remaps
-nnoremap <leader>gc :CopilotChat<CR>
+nnoremap <leader>gp :CopilotChat<CR>
 
 
 " PLUGINS
@@ -225,8 +225,9 @@ Plug 'j-hui/fidget.nvim'
 
 " Debugging
 Plug 'mfussenegger/nvim-dap'
-Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'mfussenegger/nvim-dap-python'
 
 " Useful for webdev
 Plug 'windwp/nvim-ts-autotag'   " auto close and auto rename HTML tags
@@ -237,6 +238,9 @@ Plug 'maxmellon/vim-jsx-pretty'
 
 " Color Plugins
 Plug 'ayu-theme/ayu-vim'
+
+" UI Plugins
+Plug 'nvzone/minty'
 
 " Copilot
 " NOTE: To use copilot, we will need to execute :Copilot setup and follow the
@@ -262,6 +266,9 @@ Plug 'lervag/vimtex'
 Plug 'nvzone/typr'
 Plug 'nvzone/volt'
 Plug 'lukas-reineke/indent-blankline.nvim'
+
+" CSV files
+Plug 'chrisbra/csv.vim'
 
 
 call plug#end()
@@ -300,11 +307,13 @@ let g:user_emmet_leader_key='<C-y>'
 lua << EOF
 
 require('yarepl').setup({})
+require('minty').setup({})
 
 require('tel')
 require('ts')
 require('lsp')
 require('yaml_fix')
+require('debugging')
 
 -- vim.opt.list = true
 -- vim.opt.listchars = { lead = '·', tab = '|·' }
