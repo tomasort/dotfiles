@@ -364,7 +364,21 @@ hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_ex
 
 
 
-require('CopilotChat').setup({})
+require('CopilotChat').setup({
+      mappings = {
+        complete = {
+          insert = '<Tab>',
+        },
+        close = {
+          normal = 'q',
+          insert = '<C-c>',
+        },
+        reset = {
+          normal = '<leader-l>',
+          insert = '<leader-l>',
+        },
+      }
+})
 
 require('copilot').setup({
     panel = {

@@ -1,0 +1,11 @@
+# Stow the contents of a directory into the current directory
+stow <directory_name>
+
+# Stow the contents of a directory into a specific target directory
+stow -t <target_directory> <directory_name>
+
+# Specify the source directory to stow from
+stow -d <source_directory> <directory_name>
+
+# Perform a dry run to see the output without creating links
+stow -n <directory_name>
