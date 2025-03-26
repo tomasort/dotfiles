@@ -17,6 +17,7 @@ class ChangeHandler(PatternMatchingEventHandler):
             ignore_directories=True,
             case_sensitive=True
         )
+        self.directories_to_ignore = ignore_directories
         self.command = shlex.split(command)
         self.process = None
         self.restart_command()
@@ -28,11 +29,11 @@ class ChangeHandler(PatternMatchingEventHandler):
         self.process = subprocess.Popen(self.command)
 
     def on_modified(self, event):
-        if not any(ignored in event.src_path for ignored in self.ignore_directories):
+        if not any(ignored in event.src_path for ignored in self.directories_to_ignore):
             self.restart_command()
 
     def on_created(self, event):
-        if not any(ignored in event.src_path for ignored in self.ignore_directories):
+        if not any(ignored in event.src_path for ignored in self.directories_to_ignore):
             self.restart_command()
 
 
