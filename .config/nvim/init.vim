@@ -85,12 +85,13 @@ nnoremap <leader>l :nohl<CR>
 nnoremap <leader>X :bd<CR>
 
 " open netrw in new vertical window with pv and close it with the same pv
-nnoremap <leader>pv :Vex!<CR>
-nnoremap <leader>ph :Hex<CR>
-autocmd filetype netrw noremap <buffer> <leader>pv :q<CR>
-autocmd filetype netrw noremap <buffer> <leader>ph :q<CR>
+nnoremap <leader>pv :bel vsplit<CR>:Oil<CR>
+nnoremap <leader>ph :bel split<CR>:Oil<CR>
+
+" autocmd filetype netrw noremap <buffer> <leader>pv :q<CR>
+" autocmd filetype netrw noremap <buffer> <leader>ph :q<CR>
 " open netrw in the current window
-nnoremap - :Ex<CR>
+nnoremap - :Oil<CR>
 nnoremap <leader>h :split<CR>
 nnoremap <leader>v :vsplit<CR>
 
@@ -134,8 +135,6 @@ nnoremap <leader>fo zR
 nnoremap <leader>o zo
 nnoremap <leader>c zc
 
-
-
 " REMAPS DEALING WITH PLUGINS
 " -----------------------------------------------------------
 
@@ -173,6 +172,10 @@ nnoremap <leader>u :UndotreeToggle<CR>
 
 " Copilot remaps
 nnoremap <leader>gp :CopilotChat<CR>
+
+" next and prev in quickfix
+nnoremap <leader>] :cnext<CR>
+nnoremap <leader>[ :cprev<CR>
 
 
 " PLUGINS
@@ -256,6 +259,10 @@ Plug 'zbirenbaum/copilot.lua'
 " TODO: Add avante to the list of plugins if it doesn't clash with copilot
 " https://github.com/yetone/avante.nvim
 
+" TODO : add the following plugins:
+" https://github.com/folke/trouble.nvim
+
+Plug 'stevearc/oil.nvim'
 
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -315,10 +322,13 @@ require('lsp')
 require('yaml_fix')
 require('debugging')
 
+require("oil").setup()
+
 -- vim.opt.list = true
 -- vim.opt.listchars = { lead = '·', tab = '|·' }
 
 local highlight = {
+
     "RainbowRed",
     "RainbowYellow",
     "RainbowBlue",

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# This script helps manage Git branches by listing them with 'fzf' for selection
+# and checking out the selected branch. It warns about uncommitted changes.
+
+# Check if the current directory is a Git repository
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    echo "Error: Not inside a Git repository."
+    exit 1
+fi
+
+# Check for uncommitted changes
+if ! git diff-index --quiet HEAD --; then
+    echo "Warning: You have uncommitted changes."
+    read -p "Do you want to proceed with switching branches? (y/N): " confirm
+    if [[ $confirm != "y" && $confirm != "Y" ]]; then
+        echo "Aborting branch switch."
+        exit 0
+    fi
+fi
+
+# List all branches and allow the user to select one using 'fzf'
+selected_branch=$(git branch --all --format="%(refname:short)" | fzf)
+
+# If no branch was selected, exit the script
+if [[ -z $selected_branch ]]; then
+    echo "No branch selected. Exiting."
+    exit 0
+fi
+
+# Check out the selected branch
+if git checkout "$selected_branch"; then
+    echo "Switched to branch '$selected_branch'."
+else
+    echo "Error: Failed to switch to branch '$selected_branch'."
+    exit 1
+fi

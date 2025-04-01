@@ -154,6 +154,7 @@ export PATH="$HOME:$PATH"
 
 bindkey -s ^s "tmux-sessionizer\n"
 bindkey -s ^g "tmux-gh-sessionizer\n"
+bindkey -s ^b "git-branch-switcher\n"
 
 # alias to source zshrc
 alias sz='source ~/.zshrc'
