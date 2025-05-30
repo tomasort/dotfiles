@@ -178,6 +178,24 @@ nnoremap <leader>] :cnext<CR>
 nnoremap <leader>[ :cprev<CR>
 
 
+" Diagnostics (Trouble)
+nnoremap <leader>xx <cmd>Trouble diagnostics toggle<cr>
+
+" Buffer Diagnostics (Trouble
+nnoremap <leader>xX <cmd>Trouble diagnostics toggle filter.buf=0<cr>
+
+" Symbols (Trouble)
+nnoremap <leader>cs <cmd>Trouble symbols toggle focus=false<cr>
+
+" LSP Definitions / references / ... (Trouble)
+nnoremap <leader>cl <cmd>Trouble lsp toggle focus=false win.position=right<cr>
+
+" Location List (Trouble)
+nnoremap <leader>xL <cmd>Trouble loclist toggle<cr>
+
+" Quickfix List (Trouble)
+nnoremap <leader>xQ <cmd>Trouble qflist toggle<cr>
+
 " PLUGINS
 " -----------------------------------
 
@@ -209,6 +227,7 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'tpope/vim-repeat'
 Plug 'airblade/vim-gitgutter'
 Plug 'milanglacier/yarepl.nvim'
+Plug 'folke/trouble.nvim'
 
 " Snippets
 Plug 'rafamadriz/friendly-snippets'
@@ -258,9 +277,6 @@ Plug 'zbirenbaum/copilot.lua'
 
 " TODO: Add avante to the list of plugins if it doesn't clash with copilot
 " https://github.com/yetone/avante.nvim
-
-" TODO : add the following plugins:
-" https://github.com/folke/trouble.nvim
 
 Plug 'stevearc/oil.nvim'
 
@@ -322,7 +338,31 @@ require('lsp')
 require('yaml_fix')
 require('debugging')
 
-require("oil").setup()
+require("oil").setup({
+    view_options = {
+        -- Show files and directories that start with "."
+        show_hidden = true,
+        -- This function defines what is considered a "hidden" file
+        is_hidden_file = function(name, bufnr)
+            return vim.startswith(name, '.')
+        end,
+        -- This function defines what will never be shown, even when `show_hidden` is set
+        is_always_hidden = function(name, bufnr)
+            return false
+        end,
+        -- Sort file names in a more intuitive order for humans. Is less performant,
+        -- so you may want to set to false if you work with large directories.
+        natural_order = false,
+        sort = {
+            -- sort order can be "asc" or "desc"
+            -- see :help oil-columns to see which columns are sortable
+            { 'type', 'asc' },
+            { 'name', 'asc' },
+        },
+    }
+})
+
+require("trouble").setup({})
 
 -- vim.opt.list = true
 -- vim.opt.listchars = { lead = '·', tab = '|·' }
