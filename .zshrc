@@ -129,6 +129,17 @@ function myip() {
 # Nicer prompt.
 export PS1=$'\n'"%F{green}%*%F %3~ %F{white}"$'\n'"$ "
 
+# exports for macOS
+export PATH=$HOME/tools/maven/bin:$PATH
+export PATH=/Applications/Racket\ v7.8/bin:$PATH
+export PATH=/usr/local/smlnj/bin:$PATH
+
+export SYSTEM_VERSION_COMPAT=1
+export Path=/usr/local/Cellar/rtmidi/4.0.0:$PATH
+export PATH=/usr/local/anaconda3/bin:$PATH
+export PATH="/Users/tomasortega/forgit/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+
 export TZ="America/New_York"
 
 # Git aliases.
@@ -188,3 +199,119 @@ gitr () {
 
 # source the cargo env
 [ -f ~/.cargo/env ] && source $HOME/.cargo/env
+
+# fzf utilities! actually really awsome!
+#
+# fd - cd to selected directory
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+      -o -type d -print 2> /dev/null | fzf +m) &&
+      cd "$dir"
+}
+# cf - fuzzy cd from anywhere
+# ex: cf word1 word2 ... (even part of a file name)
+# zsh autoload function
+cf() {
+  local file
+
+  file="$(locate -Ai -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1)"
+
+  if [[ -n $file ]]
+  then
+     if [[ -d $file ]]
+     then
+        cd -- $file
+     else
+        cd -- ${file:h}
+     fi
+  fi
+}
+# cdf - cd into the directory of the selected file
+# cdf() {
+#    local file
+#    local dir
+#    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+# }
+# fh - search in your command history and execute selected command
+fh() {
+    eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+}
+# ch - browse chrome history
+ch() {
+    local cols sep
+    cols=$(( COLUMNS / 3 ))
+    sep='{::}'
+
+    cp -f ~/Library/Application\ Support/Google/Chrome/Profile\ 5/History /tmp/h
+
+    sqlite3 -separator $sep /tmp/h \
+        "select substr(title, 1, $cols), url
+            from urls order by last_visit_time desc" |
+                awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+                fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
+}
+# cb - browse crhome bookmarks
+# TODO: this is currently not working. it needs to be fixed
+cb() {
+     bookmarks_path=~/Library/Application\ Support/Google/Chrome/Profile\ 5/Bookmarks
+
+     jq_script='
+        def ancestors: while(. | length >= 2; del(.[-1,-2]));
+        . as $in | paths(.url?) as $key | $in | getpath($key) | {name,url, path: [$key[0:-2] | ancestors as $a | $in | getpath($a) | .name?] | reverse | join("/") } | .path + "/" + .name + "\t" + .url'
+
+    jq -r "$jq_script" < "$bookmarks_path" \
+        | sed -E $'s/(.*)\t(.*)/\\1\t\x1b[36m\\2\x1b[m/g' \
+        | fzf --ansi \
+        | cut -d$'\t' -f2 \
+        | xargs open
+}
+# Like normal cd but opens an interactive navigation window when called with no arguments. For ls, use -FG instead of --color=always on osx.
+function cd() {
+    if [[ "$#" != 0 ]]; then
+        builtin cd "$@";
+        return
+    fi
+    while true; do
+        local lsd=$(echo ".." && ls -p | grep '/$' | sed 's;/$;;')
+        local dir="$(printf '%s\n' "${lsd[@]}" |
+            fzf --reverse --preview '
+                __cd_nxt="$(echo {})";
+                __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
+                echo $__cd_path;
+                echo;
+                ls -p --color=always "${__cd_path}";
+        ')"
+        [[ ${#dir} != 0 ]] || return 0
+        builtin cd "$dir" &> /dev/null
+    done
+}
+# Select a docker container to start and attach to
+function da() {
+  local cid
+  cid=$(docker ps -a | sed 1d | fzf -1 -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker start "$cid" && docker attach "$cid"
+}
+# Select a running docker container to stop
+function ds() {
+  local cid
+  cid=$(docker ps | sed 1d | fzf -q "$1" | awk '{print $1}')
+
+  [ -n "$cid" ] && docker stop "$cid"
+}
+# vf - fuzzy open with vim from anywhere
+# ex: vf word1 word2 ... (even part of a file name)
+# zsh autoload function
+vf() {
+  local files
+
+  files=(${(f)"$(locate -Ai -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1 -m)"})
+
+  if [[ -n $files ]]
+  then
+     vim -- $files
+     print -l $files[1]
+  fi
+}
+# end of fzf utilities
