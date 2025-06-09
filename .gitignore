@@ -2,3 +2,5 @@
 .config/gh/hosts.yml
 .config/github-copilot/
 .config/go/
+
+.ipython/profile_default/history.sqlite
