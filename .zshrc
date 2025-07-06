@@ -133,6 +133,7 @@ export PS1=$'\n'"%F{green}%*%F %3~ %F{white}"$'\n'"$ "
 export PATH=$HOME/tools/maven/bin:$PATH
 export PATH=/Applications/Racket\ v7.8/bin:$PATH
 export PATH=/usr/local/smlnj/bin:$PATH
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
 
 export SYSTEM_VERSION_COMPAT=1
 export Path=/usr/local/Cellar/rtmidi/4.0.0:$PATH
