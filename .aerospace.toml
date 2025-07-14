@@ -4,15 +4,18 @@
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
 # Available commands: https://nikitabobko.github.io/AeroSpace/commands
-after-login-command = [
-    '''exec-and-forget osascript -e '
-    tell application "XQuartz"
-        if not (running) then
-            activate
-        end if
-    end tell'
-    '''
-]
+
+# Depracated in the latest version of Aerospace.
+
+# after-login-command = [
+#     '''exec-and-forget osascript -e '
+#     tell application "XQuartz"
+#         if not (running) then
+#             activate
+#         end if
+#     end tell'
+#     '''
+# ]
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
@@ -203,6 +206,11 @@ backspace = ['close-all-windows-but-current', 'mode main']
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 if.window-title-regex-substring = 'Picture in Picture'
+run = 'layout floating'
+check-further-callbacks = true
+
+[[on-window-detected]]
+if.app-id = 'cx.c3.theunarchiver'
 run = 'layout floating'
 check-further-callbacks = true
 
