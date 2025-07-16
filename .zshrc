@@ -189,6 +189,9 @@ export PATH="$HOME/go/bin:$PATH"
 # alias for nvim
 alias vim='nvim'
 
+# set nvim as the default editor
+export EDITOR='nvim'
+
 gitr () {
   for f in $(find . -type d -name .git | awk -F"/.git$" '{print $1}');  do
     echo
