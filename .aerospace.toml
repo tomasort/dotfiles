@@ -5,7 +5,7 @@
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
 # Available commands: https://nikitabobko.github.io/AeroSpace/commands
 
-# Depracated in the latest version of Aerospace.
+# Deprecated in the latest version of Aerospace.
 
 # after-login-command = [
 #     '''exec-and-forget osascript -e '
@@ -20,11 +20,12 @@
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = [
-    # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroSpace restart
-    'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
-]
+
+# after-startup-command = [
+#     # JankyBorders has a built-in detection of already running process,
+#     # so it won't be run twice on AeroSpace restart
+#     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
+# ]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -58,7 +59,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodness#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
-# Execute script when workspace changes to move Picture-in-Picture windows
+# # Execute script when workspace changes to move Picture-in-Picture windows
 exec-on-workspace-change = ['/bin/bash', '-c',
     '~/.config/aerospace/pip-move.sh'
 ]
@@ -203,26 +204,26 @@ backspace = ['close-all-windows-but-current', 'mode main']
 #s = ['layout sticky tiling', 'mode main']
 
 
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-if.window-title-regex-substring = 'Picture in Picture'
-run = 'layout floating'
-check-further-callbacks = true
+# [[on-window-detected]]
+# if.app-id = 'com.google.Chrome'
+# if.window-title-regex-substring = 'Picture in Picture'
+# run = 'layout floating'
+# check-further-callbacks = true
 
-[[on-window-detected]]
-if.app-id = 'cx.c3.theunarchiver'
-run = 'layout floating'
-check-further-callbacks = true
+# [[on-window-detected]]
+# if.app-id = 'cx.c3.theunarchiver'
+# run = 'layout floating'
+# check-further-callbacks = true
 
 [[on-window-detected]]
 if.app-id = 'com.fiplab.smartcountdowntimer'
 run = 'layout floating'
 check-further-callbacks = true
 
-[[on-window-detected]]
-if.app-id = 'org.videolan.vlc'
-run = 'layout tiling'
-check-further-callbacks = true
+# [[on-window-detected]]
+# if.app-id = 'org.videolan.vlc'
+# run = 'layout tiling'
+# check-further-callbacks = true
 
 [mode.move.binding]
 ctrl-h = ['move left', 'mode main']
