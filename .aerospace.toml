@@ -184,7 +184,7 @@ ctrl-shift-8 = 'move-node-to-workspace 8'
 ctrl-shift-9 = 'move-node-to-workspace 9'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-shift-tab = 'workspace-back-and-forth'
+ctrl-0 = 'workspace-back-and-forth'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 ctrl-shift-semicolon = 'mode service'

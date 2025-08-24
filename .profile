@@ -32,3 +32,5 @@ export PATH="$PATH:/home/odroid/.local/bin"
 
 # Created by `pipx` on 2025-02-11 15:27:51
 export PATH="$PATH:/home/tomasortega/.local/bin"
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"

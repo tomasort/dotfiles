@@ -49,6 +49,7 @@ require("mason-lspconfig").setup({
         'jdtls',
         'marksman',
         'texlab',
+        'pylsp', -- Add this line
     },
     handlers = {
         function(server_name) -- default handler (optional)
@@ -76,7 +77,7 @@ require("mason-lspconfig").setup({
                     }
                 }
             }
-        end,
+        end
     }
 })
 
@@ -213,15 +214,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-require 'lspconfig'.pylsp.setup {
+
+vim.lsp.config('pylsp', {
+    capabilities = capabilities,
     settings = {
         pylsp = {
             plugins = {
+                autopep8 = { enabled = false }, -- Disable autopep8 formatter
+                yapf = { enabled = false },     -- Disable yapf formatter
                 pycodestyle = {
-                    ignore = { 'E501', 'E741' },
+                    ignore = { "E501", "E741", "E402" },
                     maxLineLength = 100
                 }
             }
         }
     }
-}
+})
