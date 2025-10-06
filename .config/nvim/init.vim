@@ -427,7 +427,8 @@ require('CopilotChat').setup({
           normal = '<leader-l>',
           insert = '<leader-l>',
         },
-      }
+      },
+      model = 'gpt-4.1'
 })
 
 require('copilot').setup({
