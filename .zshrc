@@ -138,6 +138,7 @@ export PATH=$HOME/tools/maven/bin:$PATH
 export PATH=/Applications/Racket\ v7.8/bin:$PATH
 export PATH=/usr/local/smlnj/bin:$PATH
 export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+export PATH="/Applications/IntelliJ IDEA CE.app/Contents/MacOS:$PATH"
 
 export SYSTEM_VERSION_COMPAT=1
 export Path=/usr/local/Cellar/rtmidi/4.0.0:$PATH
@@ -323,3 +324,7 @@ vf() {
   fi
 }
 # end of fzf utilities
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
