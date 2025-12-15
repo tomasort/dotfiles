@@ -1,0 +1,14 @@
+[user]
+	name = tomasort
+	email = tomasvortegar@gmail.com
+[core]
+	autocrlf = input
+[filesystem "Oracle Corporation|13.0.2|/dev/disk1s2"]
+	timestampResolution = 6000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[color]
+	ui = auto
+[rerere]
+	enabled = True
+[init]
+	defaultBranch = main

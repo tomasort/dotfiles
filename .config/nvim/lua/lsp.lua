@@ -98,6 +98,9 @@ cmp.setup({
             require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
         end,
     },
+    completion = {
+        autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged },
+    },
     window = {
         -- completion = cmp.config.window.bordered(),
         -- documentation = cmp.config.window.bordered(),

@@ -4,6 +4,9 @@ tags: [ vcs ]
 # Removes the file from Git's index (staging area), meaning Git will stop tracking it.
 git rm --cached <file>
 
+# Remove the entire target/ directory from git’s list of files to think about.
+git rm -r --cached target/ 
+
 # Marks the file as "skipped" for future updates in the working tree. 
 # Use this when you want to temporarily ignore local changes to a file without affecting its version in the repository.
 git update-index --skip-worktree <file>

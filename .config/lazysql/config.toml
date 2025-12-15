@@ -1,0 +1,9 @@
+[[database]]
+Name = 'Postgres docker'
+Provider = 'postgres'
+DBName = 'mydatabase'
+URL = 'postgresql://myuser:secret@localhost:5432/mydatabase?sslmode=disable'
+[application]
+DefaultPageSize = 300
+DisableSidebar = false
+SidebarOverlay = false

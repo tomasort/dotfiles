@@ -10,13 +10,12 @@ fi
 
 # path to go
 export PATH=$PATH:/usr/local/go/bin
-
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-
 # path to volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
