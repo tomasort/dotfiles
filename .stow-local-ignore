@@ -12,9 +12,9 @@ CVS
 _darcs
 \.hg
 
-\.git
-\.gitignore
-\.gitmodules
+\.git(?:/|$)
+\.gitignore$
+\.gitmodules$
 
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files

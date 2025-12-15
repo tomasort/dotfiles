@@ -141,7 +141,6 @@ export PATH="/Applications/IntelliJ IDEA CE.app/Contents/MacOS:$PATH"
 
 export SYSTEM_VERSION_COMPAT=1
 export Path=/usr/local/Cellar/rtmidi/4.0.0:$PATH
-export PATH=/usr/local/anaconda3/bin:$PATH
 export PATH="/Users/tomasortega/forgit/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
