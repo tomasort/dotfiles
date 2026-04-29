@@ -5,6 +5,11 @@ return {
   { "mbbill/undotree" },
   { "tpope/vim-fugitive" },
   { "kdheepak/lazygit.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+  },
   { "junegunn/fzf", build = "./install --all" },
   { "junegunn/fzf.vim", dependencies = { "junegunn/fzf" } },
   {
@@ -96,28 +101,28 @@ return {
 
       map("n", "<leader>a", function()
         harpoon:list():add()
-      end)
+      end, { desc = "Harpoon add file" })
       map("n", "<leader>1", function()
         harpoon:list():select(1)
-      end)
+      end, { desc = "Harpoon file 1" })
       map("n", "<leader>2", function()
         harpoon:list():select(2)
-      end)
+      end, { desc = "Harpoon file 2" })
       map("n", "<leader>3", function()
         harpoon:list():select(3)
-      end)
+      end, { desc = "Harpoon file 3" })
       map("n", "<leader>4", function()
         harpoon:list():select(4)
-      end)
+      end, { desc = "Harpoon file 4" })
       map("n", "<leader>5", function()
         harpoon:list():select(5)
-      end)
+      end, { desc = "Harpoon file 5" })
       map("n", "<C-S-P>", function()
         harpoon:list():prev()
-      end)
+      end, { desc = "Previous harpoon file" })
       map("n", "<C-S-N>", function()
         harpoon:list():next()
-      end)
+      end, { desc = "Next harpoon file" })
       map("n", "<C-e>", function()
         toggle_telescope(harpoon:list())
       end, { desc = "Open harpoon window" })
@@ -126,11 +131,11 @@ return {
         UI_CREATE = function(cx)
           map("n", "<C-v>", function()
             harpoon.ui:select_menu_item({ vsplit = true })
-          end, { buffer = cx.bufnr })
+          end, { buffer = cx.bufnr, desc = "Open in vertical split" })
 
           map("n", "<C-h>", function()
             harpoon.ui:select_menu_item({ split = true })
-          end, { buffer = cx.bufnr })
+          end, { buffer = cx.bufnr, desc = "Open in horizontal split" })
         end,
       })
     end,

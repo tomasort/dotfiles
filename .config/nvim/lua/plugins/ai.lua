@@ -45,7 +45,7 @@ return {
         else
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
         end
-      end, silent)
+      end, vim.tbl_extend("force", silent, { desc = "Accept Copilot suggestion" }))
     end,
   },
   { "zbirenbaum/copilot.lua" },

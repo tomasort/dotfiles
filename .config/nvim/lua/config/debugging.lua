@@ -3,8 +3,8 @@ local dapui = require("dapui")
 
 dapui.setup()
 
-vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, { noremap = true })
-vim.keymap.set("n", "<leader>dc", dap.continue, { noremap = true })
+vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, { noremap = true, desc = "Toggle breakpoint" })
+vim.keymap.set("n", "<leader>dc", dap.continue, { noremap = true, desc = "Start or continue debugging" })
 
 dap.listeners.before.attach.dapui_config = function()
   dapui.open()

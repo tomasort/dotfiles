@@ -1,5 +1,6 @@
 vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
 vim.opt.conceallevel = 0
+vim.opt.inccommand = "split"
 
 require("config.filetypes")
 

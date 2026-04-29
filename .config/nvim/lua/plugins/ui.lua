@@ -1,6 +1,29 @@
 return {
   { "nvim-tree/nvim-web-devicons" },
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer local keymaps",
+      },
+    },
+    opts = {
+      preset = "helix",
+      spec = {
+        { "<leader>c", group = "code" },
+        { "<leader>g", group = "git" },
+        { "<leader>p", group = "project" },
+        { "<leader>t", group = "telescope" },
+        { "<leader>x", group = "diagnostics" },
+      },
+    },
+  },
+  {
     "ayu-theme/ayu-vim",
     priority = 1000,
     config = function()

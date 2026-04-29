@@ -3,8 +3,19 @@ require("mason").setup({})
 require("mason-tool-installer").setup({
   ensure_installed = {
     "ansible-lint",
+    "black",
+    "luacheck",
     "misspell",
     "eslint_d",
+    "gofumpt",
+    "goimports",
+    "golangci-lint",
+    "isort",
+    "prettierd",
+    "ruff",
+    "shellcheck",
+    "shfmt",
+    "stylua",
   },
 })
 
@@ -94,6 +105,7 @@ cmp.setup({
     ["<C-Space>"] = cmp.mapping.complete(),
   }),
   sources = cmp.config.sources({
+    { name = "lazydev", group_index = 0 },
     { name = "nvim_lsp" },
     { name = "luasnip" },
   }, {
@@ -135,74 +147,48 @@ cmp.event:on("confirm_done", function(args)
   cmp_autopairs.on_confirm_done()(args)
 end)
 
-local autoformat_enabled = true
-
-local function toggle_autoformat()
-  autoformat_enabled = not autoformat_enabled
-  if autoformat_enabled then
-    print("Autoformat enabled")
-  else
-    print("Autoformat disabled")
-  end
-end
-
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("user_lsp_attach", { clear = true }),
   callback = function(event)
     local opts = { buffer = event.buf }
     vim.keymap.set("n", "gd", function()
       vim.lsp.buf.definition()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
     vim.keymap.set("n", "<leader>gd", function()
       vim.cmd("vsplit")
       vim.lsp.buf.definition()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Definition in split" }))
     vim.keymap.set("n", "gi", function()
       vim.lsp.buf.implementation()
-    end, opts)
-    vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, {})
+    end, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+    vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, vim.tbl_extend("force", opts, { desc = "References" }))
     vim.keymap.set("n", "K", function()
       vim.lsp.buf.hover()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
     vim.keymap.set("n", "<leader>vws", function()
       vim.lsp.buf.workspace_symbol()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
     vim.keymap.set("n", "<leader>vd", function()
       vim.diagnostic.open_float()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Line diagnostics" }))
     vim.keymap.set("n", "<leader>ca", function()
       vim.lsp.buf.code_action()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Code action" }))
     vim.keymap.set("n", "<leader>rr", function()
       vim.lsp.buf.references()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Symbol references" }))
     vim.keymap.set("n", "<leader>rn", function()
-      vim.lsp.buf.rename()
-    end, opts)
+      return ":IncRename " .. vim.fn.expand("<cword>")
+    end, vim.tbl_extend("force", opts, { desc = "Rename symbol", expr = true }))
     vim.keymap.set("n", "[d", function()
       vim.diagnostic.goto_next()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
     vim.keymap.set("n", "]d", function()
       vim.diagnostic.goto_prev()
-    end, opts)
+    end, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
     vim.keymap.set("i", "<C-h>", function()
       vim.lsp.buf.signature_help()
-    end, opts)
-    vim.keymap.set("n", "<leader>af", toggle_autoformat, opts)
-
-    if event.data and event.data.client_id then
-      local client = vim.lsp.get_client_by_id(event.data.client_id)
-      if client.server_capabilities.documentFormattingProvider then
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          buffer = event.buf,
-          callback = function()
-            if autoformat_enabled then
-              vim.lsp.buf.format({ async = false, bufnr = event.buf })
-            end
-          end,
-        })
-      end
-    end
+    end, vim.tbl_extend("force", opts, { desc = "Signature help" }))
   end,
 })
 
