@@ -9,7 +9,7 @@ return {
     "mfussenegger/nvim-dap-python",
     dependencies = { "mfussenegger/nvim-dap" },
     config = function()
-      require("debugging")
+      require("config.debugging")
     end,
   },
 }

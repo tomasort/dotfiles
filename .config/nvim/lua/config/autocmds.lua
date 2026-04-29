@@ -1,7 +1,7 @@
 vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
 vim.opt.conceallevel = 0
 
-require("yaml_fix")
+require("config.filetypes")
 
 vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*",

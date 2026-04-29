@@ -1,25 +1,17 @@
--- TELESCOPE & TELESCOPE FILE BROWSING CONFIGURATION 
--- -----------------------------------
-local fb_actions = require "telescope._extensions.file_browser.actions"
-require("telescope").setup {
-defaults = {
-    -- Default configuration for telescope goes here:
-    -- config_key = value,
+local fb_actions = require("telescope._extensions.file_browser.actions")
+
+require("telescope").setup({
+  defaults = {
     mappings = {
-        i = {
-            -- map actions.which_key to <C-h> (default: <C-/>)
-            -- actions.which_key shows the mappings for your picker,
-            -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-            ["<C-h>"] = "which_key"
-        }
-    }
-},
+      i = {
+        ["<C-h>"] = "which_key",
+      },
+    },
+  },
   extensions = {
     file_browser = {
       theme = "ivy",
-      -- disables netrw and use telescope-file-browser in its place
       hijack_netrw = false,
-
       path = vim.loop.cwd(),
       cwd = vim.loop.cwd(),
       cwd_to_path = false,
@@ -30,7 +22,7 @@ defaults = {
       auto_depth = false,
       select_buffer = false,
       hidden = { file_browser = false, folder_browser = false },
-      respect_gitignore = vim.fn.executable "fd" == 1,
+      respect_gitignore = vim.fn.executable("fd") == 1,
       no_ignore = false,
       follow_symlinks = false,
       browse_files = require("telescope._extensions.file_browser.finders").browse_files,
@@ -45,7 +37,7 @@ defaults = {
       use_fd = true,
       git_status = true,
       mappings = {
-        ["i"] = {
+        i = {
           ["<A-c>"] = fb_actions.create,
           ["<S-CR>"] = fb_actions.create_from_prompt,
           ["<A-r>"] = fb_actions.rename,
@@ -62,26 +54,24 @@ defaults = {
           ["<C-s>"] = fb_actions.toggle_all,
           ["<bs>"] = fb_actions.backspace,
         },
-        ["n"] = {
-          ["c"] = fb_actions.create,
-          ["r"] = fb_actions.rename,
-          ["m"] = fb_actions.move,
-          ["y"] = fb_actions.copy,
-          ["d"] = fb_actions.remove,
-          ["o"] = fb_actions.open,
-          ["g"] = fb_actions.goto_parent_dir,
-          ["e"] = fb_actions.goto_home_dir,
-          ["w"] = fb_actions.goto_cwd,
-          ["t"] = fb_actions.change_cwd,
-          ["f"] = fb_actions.toggle_browser,
-          ["h"] = fb_actions.toggle_hidden,
-          ["s"] = fb_actions.toggle_all,
-        }
+        n = {
+          c = fb_actions.create,
+          r = fb_actions.rename,
+          m = fb_actions.move,
+          y = fb_actions.copy,
+          d = fb_actions.remove,
+          o = fb_actions.open,
+          g = fb_actions.goto_parent_dir,
+          e = fb_actions.goto_home_dir,
+          w = fb_actions.goto_cwd,
+          t = fb_actions.change_cwd,
+          f = fb_actions.toggle_browser,
+          h = fb_actions.toggle_hidden,
+          s = fb_actions.toggle_all,
+        },
       },
     },
   },
-}
+})
 
--- To get telescope-file-browser loaded and working with telescope,
--- you need to call load_extension, somewhere after setup function:
-require("telescope").load_extension "file_browser"
+require("telescope").load_extension("file_browser")
