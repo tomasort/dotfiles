@@ -1,47 +1,49 @@
 -- TREESITTER
 -- ------------------------------------
-require 'nvim-treesitter.configs'.setup {
-    -- A list of parser names, or "all"
-    ensure_installed = {
-        "c",
-        "cpp",
-        "cmake",
-        "css",
-        "diff",
-        "gitignore",
-        "go",
-        "html",
-        "http",
-        "java",
-        "javascript",
-        "typescript",
-        "tsx",
-        "json",
-        "sql",
-        "xml",
-        "yaml",
-        "lua",
-        "vim",
-        "vimdoc",
-        "markdown",
-        "markdown_inline",
-        "make",
-        "dockerfile",
-        "bash",
-        "nginx",
-        "matlab",
-        "rust",
-        "python",
-        "toml"
-    },
-    -- Install parsers synchronously (only applied to `ensure_installed`)
-    sync_install = false,
-
-    -- Automatically install missing parsers when entering buffer
-    auto_install = true,
-
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
+local languages = {
+    "c",
+    "cpp",
+    "cmake",
+    "css",
+    "diff",
+    "gitignore",
+    "go",
+    "html",
+    "http",
+    "java",
+    "javascript",
+    "typescript",
+    "tsx",
+    "json",
+    "sql",
+    "xml",
+    "yaml",
+    "lua",
+    "vim",
+    "vimdoc",
+    "markdown",
+    "markdown_inline",
+    "make",
+    "dockerfile",
+    "bash",
+    "nginx",
+    "matlab",
+    "rust",
+    "python",
+    "toml",
 }
+
+local install_dir = vim.fn.stdpath("data") .. "/treesitter"
+
+require("nvim-treesitter").setup({
+    install_dir = install_dir,
+})
+
+require("nvim-treesitter").install(languages)
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function(args)
+        pcall(vim.treesitter.start, args.buf)
+    end,
+})
