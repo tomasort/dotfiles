@@ -115,29 +115,36 @@ outer.right =      0
 # '''
 
 
-ctrl-shift-enter = '''exec-and-forget open -na ghostty --args --quit-after-last-window-closed=true'''
+ctrl-shift-enter = '''exec-and-forget osascript -e '
+tell application "iTerm"
+    create window with default profile
+    activate
+end tell'
+'''
 
-# # Go into iterm2 and do ssh to the odroid machine in my local network
-# ctrl-shift-o = '''exec-and-forget osascript -e '
-# tell application "iTerm"
-#     tell current window
-#         create window with default profile
-#         tell current session to write text " ssh -Y odroid@192.168.1.50"
-#     end tell
-#     activate
-# end tell'
-# '''
+ctrl-shift-b = "exec-and-forget osascript -e 'tell application \"Brave Browser\" to make new window'"
 
-# # Go into iterm2 and do ssh to the raspberrypi machine in my local network
-# ctrl-shift-p = '''exec-and-forget osascript -e '
-# tell application "iTerm"
-#     tell current window
-#         create window with default profile
-#         tell current session to write text " ssh -Y tomasortega@192.168.1.31"
-#     end tell
-#     activate
-# end tell'
-# '''
+# Go into iterm2 and do ssh to the odroid machine in my local network
+ctrl-shift-o = '''exec-and-forget osascript -e '
+tell application "iTerm"
+    tell current window
+        create window with default profile
+        tell current session to write text " ssh -Y odroid@192.168.1.50"
+    end tell
+    activate
+end tell'
+'''
+
+# Go into iterm2 and do ssh to the raspberrypi machine in my local network
+ctrl-shift-p = '''exec-and-forget osascript -e '
+tell application "iTerm"
+    tell current window
+        create window with default profile
+        tell current session to write text " ssh -Y tomasortega@192.168.1.31"
+    end tell
+    activate
+end tell'
+'''
 
 
 
