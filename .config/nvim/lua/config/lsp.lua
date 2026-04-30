@@ -76,14 +76,13 @@ require("luasnip.loaders.from_vscode").lazy_load()
 local document_highlight_group = vim.api.nvim_create_augroup("user_lsp_document_highlight", { clear = true })
 
 vim.diagnostic.config({
-  float = {
-    focusable = false,
-    style = "minimal",
-    border = "rounded",
-    source = "always",
-    header = "",
-    prefix = "",
-  },
+  update_in_insert = false,
+  severity_sort = true,
+  float = { border = "rounded", source = "if_many" },
+  underline = { severity = { min = vim.diagnostic.severity.WARN } },
+  virtual_text = true,
+  virtual_lines = false,
+  jump = { float = true },
 })
 
 vim.lsp.config("pylsp", {
@@ -103,6 +102,7 @@ vim.lsp.config("pylsp", {
 })
 
 local lsp_keymaps = vim.api.nvim_create_augroup("user_lsp_keymaps", { clear = true })
+local telescope_builtin = require("telescope.builtin")
 vim.api.nvim_create_autocmd("LspAttach", {
   group = lsp_keymaps,
   callback = function(event)
@@ -133,6 +133,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>rr", function()
       vim.lsp.buf.references()
     end, { buffer = event.buf, desc = "Symbol references" })
+    vim.keymap.set("n", "grr", telescope_builtin.lsp_references, { buffer = event.buf, desc = "[G]oto [R]eferences" })
+    vim.keymap.set("n", "gri", telescope_builtin.lsp_implementations, { buffer = event.buf, desc = "[G]oto [I]mplementation" })
+    vim.keymap.set("n", "grd", telescope_builtin.lsp_definitions, { buffer = event.buf, desc = "[G]oto [D]efinition" })
+    vim.keymap.set("n", "gO", telescope_builtin.lsp_document_symbols, { buffer = event.buf, desc = "Open Document Symbols" })
+    vim.keymap.set("n", "gW", telescope_builtin.lsp_dynamic_workspace_symbols, { buffer = event.buf, desc = "Open Workspace Symbols" })
+    vim.keymap.set("n", "grt", telescope_builtin.lsp_type_definitions, { buffer = event.buf, desc = "[G]oto [T]ype Definition" })
+    vim.keymap.set("n", "grn", vim.lsp.buf.rename, { buffer = event.buf, desc = "[R]e[n]ame" })
+    vim.keymap.set({ "n", "x" }, "gra", vim.lsp.buf.code_action, { buffer = event.buf, desc = "[G]oto Code [A]ction" })
+    vim.keymap.set("n", "grD", vim.lsp.buf.declaration, { buffer = event.buf, desc = "[G]oto [D]eclaration" })
     vim.keymap.set("n", "<leader>rn", function()
       return ":IncRename " .. vim.fn.expand("<cword>")
     end, { buffer = event.buf, desc = "Rename symbol", expr = true })

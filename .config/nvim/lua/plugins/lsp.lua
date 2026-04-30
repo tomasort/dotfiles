@@ -71,7 +71,7 @@ return {
       },
     },
   },
-  { "j-hui/fidget.nvim" },
+  { "j-hui/fidget.nvim", opts = {} },
   {
     "stevearc/conform.nvim",
     config = function()
