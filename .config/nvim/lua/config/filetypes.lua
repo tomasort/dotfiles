@@ -43,10 +43,8 @@ end
 
 vim.api.nvim_create_autocmd("BufRead", {
   pattern = "*",
-  callback = yaml_filetype_detector,
-})
-
-vim.api.nvim_create_autocmd("BufRead", {
-  pattern = "*",
-  callback = dockerfile_fix,
+  callback = function()
+    yaml_filetype_detector()
+    dockerfile_fix()
+  end,
 })

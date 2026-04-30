@@ -19,22 +19,14 @@ require("mason-tool-installer").setup({
   },
 })
 
-local cmp = require("cmp")
-local cmp_lsp = require("cmp_nvim_lsp")
-
-local capabilities = vim.tbl_deep_extend(
-  "force",
-  {},
-  vim.lsp.protocol.make_client_capabilities(),
-  cmp_lsp.default_capabilities()
-)
+local blink = require("blink.cmp")
+local capabilities = blink.get_lsp_capabilities()
 
 require("mason-lspconfig").setup({
   ensure_installed = {
     "rust_analyzer",
     "lua_ls",
     "ts_ls",
-    "rust_analyzer",
     "dockerls",
     "docker_compose_language_service",
     "arduino_language_server",
@@ -81,50 +73,7 @@ require("mason-lspconfig").setup({
 
 require("luasnip.loaders.from_vscode").lazy_load()
 
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local ellipsis_char = "..."
-local max_label_width = 30
-local min_label_width = 30
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body)
-    end,
-  },
-  completion = {
-    autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged },
-  },
-  window = {},
-  mapping = cmp.mapping.preset.insert({
-    ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-    ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
-  }),
-  sources = cmp.config.sources({
-    { name = "lazydev", group_index = 0 },
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-  }, {
-    { name = "buffer" },
-  }),
-  formatting = {
-    format = function(_, vim_item)
-      local label = vim_item.abbr
-      local truncated_label = vim.fn.strcharpart(label, 0, max_label_width)
-      if truncated_label ~= label then
-        vim_item.abbr = truncated_label .. ellipsis_char
-      elseif string.len(label) < min_label_width then
-        local padding = string.rep(" ", min_label_width - string.len(label))
-        vim_item.abbr = label .. padding
-      end
-      return vim_item
-    end,
-  },
-})
+local document_highlight_group = vim.api.nvim_create_augroup("user_lsp_document_highlight", { clear = true })
 
 vim.diagnostic.config({
   float = {
@@ -135,61 +84,6 @@ vim.diagnostic.config({
     header = "",
     prefix = "",
   },
-})
-
-local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-cmp.event:on("confirm_done", function(args)
-  local line = vim.api.nvim_get_current_line()
-  local is_import = line:match("^%s*import%s+.*$") or line:match("^%s*from%s+.*$")
-  if is_import then
-    return
-  end
-  cmp_autopairs.on_confirm_done()(args)
-end)
-
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("user_lsp_attach", { clear = true }),
-  callback = function(event)
-    local opts = { buffer = event.buf }
-    vim.keymap.set("n", "gd", function()
-      vim.lsp.buf.definition()
-    end, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
-    vim.keymap.set("n", "<leader>gd", function()
-      vim.cmd("vsplit")
-      vim.lsp.buf.definition()
-    end, vim.tbl_extend("force", opts, { desc = "Definition in split" }))
-    vim.keymap.set("n", "gi", function()
-      vim.lsp.buf.implementation()
-    end, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
-    vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, vim.tbl_extend("force", opts, { desc = "References" }))
-    vim.keymap.set("n", "K", function()
-      vim.lsp.buf.hover()
-    end, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
-    vim.keymap.set("n", "<leader>vws", function()
-      vim.lsp.buf.workspace_symbol()
-    end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
-    vim.keymap.set("n", "<leader>vd", function()
-      vim.diagnostic.open_float()
-    end, vim.tbl_extend("force", opts, { desc = "Line diagnostics" }))
-    vim.keymap.set("n", "<leader>ca", function()
-      vim.lsp.buf.code_action()
-    end, vim.tbl_extend("force", opts, { desc = "Code action" }))
-    vim.keymap.set("n", "<leader>rr", function()
-      vim.lsp.buf.references()
-    end, vim.tbl_extend("force", opts, { desc = "Symbol references" }))
-    vim.keymap.set("n", "<leader>rn", function()
-      return ":IncRename " .. vim.fn.expand("<cword>")
-    end, vim.tbl_extend("force", opts, { desc = "Rename symbol", expr = true }))
-    vim.keymap.set("n", "[d", function()
-      vim.diagnostic.goto_next()
-    end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
-    vim.keymap.set("n", "]d", function()
-      vim.diagnostic.goto_prev()
-    end, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
-    vim.keymap.set("i", "<C-h>", function()
-      vim.lsp.buf.signature_help()
-    end, vim.tbl_extend("force", opts, { desc = "Signature help" }))
-  end,
 })
 
 vim.lsp.config("pylsp", {
@@ -206,4 +100,76 @@ vim.lsp.config("pylsp", {
       },
     },
   },
+})
+
+local lsp_keymaps = vim.api.nvim_create_augroup("user_lsp_keymaps", { clear = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = lsp_keymaps,
+  callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    vim.keymap.set("n", "gd", function()
+      vim.lsp.buf.definition()
+    end, { buffer = event.buf, desc = "Go to definition" })
+    vim.keymap.set("n", "<leader>gd", function()
+      vim.cmd("vsplit")
+      vim.lsp.buf.definition()
+    end, { buffer = event.buf, desc = "Definition in split" })
+    vim.keymap.set("n", "gi", function()
+      vim.lsp.buf.implementation()
+    end, { buffer = event.buf, desc = "Go to implementation" })
+    vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, { buffer = event.buf, desc = "References" })
+    vim.keymap.set("n", "K", function()
+      vim.lsp.buf.hover()
+    end, { buffer = event.buf, desc = "Hover documentation" })
+    vim.keymap.set("n", "<leader>vws", function()
+      vim.lsp.buf.workspace_symbol()
+    end, { buffer = event.buf, desc = "Workspace symbols" })
+    vim.keymap.set("n", "<leader>vd", function()
+      vim.diagnostic.open_float()
+    end, { buffer = event.buf, desc = "Line diagnostics" })
+    vim.keymap.set("n", "<leader>ca", function()
+      vim.lsp.buf.code_action()
+    end, { buffer = event.buf, desc = "Code action" })
+    vim.keymap.set("n", "<leader>rr", function()
+      vim.lsp.buf.references()
+    end, { buffer = event.buf, desc = "Symbol references" })
+    vim.keymap.set("n", "<leader>rn", function()
+      return ":IncRename " .. vim.fn.expand("<cword>")
+    end, { buffer = event.buf, desc = "Rename symbol", expr = true })
+    if client and client:supports_method("textDocument/inlayHint") then
+      vim.keymap.set("n", "<leader>ci", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
+      end, { buffer = event.buf, desc = "Toggle inlay hints" })
+    end
+    vim.keymap.set("n", "[d", function()
+      vim.diagnostic.goto_prev()
+    end, { buffer = event.buf, desc = "Previous diagnostic" })
+    vim.keymap.set("n", "]d", function()
+      vim.diagnostic.goto_next()
+    end, { buffer = event.buf, desc = "Next diagnostic" })
+    vim.keymap.set("i", "<C-h>", function()
+      vim.lsp.buf.signature_help()
+    end, { buffer = event.buf, desc = "Signature help" })
+
+    if client and client:supports_method("textDocument/documentHighlight") then
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        buffer = event.buf,
+        group = document_highlight_group,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+        buffer = event.buf,
+        group = document_highlight_group,
+        callback = vim.lsp.buf.clear_references,
+      })
+      vim.api.nvim_create_autocmd("LspDetach", {
+        buffer = event.buf,
+        group = document_highlight_group,
+        callback = function(detach_event)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds({ group = document_highlight_group, buffer = detach_event.buf })
+        end,
+      })
+    end
+  end,
 })

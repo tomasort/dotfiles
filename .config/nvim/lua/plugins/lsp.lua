@@ -12,11 +12,6 @@ return {
     end,
   },
   { "neovim/nvim-lspconfig" },
-  { "hrsh7th/cmp-nvim-lsp", dependencies = { "hrsh7th/nvim-cmp" } },
-  { "hrsh7th/cmp-buffer", dependencies = { "hrsh7th/nvim-cmp" } },
-  { "hrsh7th/cmp-path", dependencies = { "hrsh7th/nvim-cmp" } },
-  { "hrsh7th/cmp-cmdline", dependencies = { "hrsh7th/nvim-cmp" } },
-  { "hrsh7th/nvim-cmp" },
   {
     "folke/lazydev.nvim",
     ft = "lua",
@@ -26,10 +21,55 @@ return {
       },
     },
   },
-  { "L3MON4D3/LuaSnip" },
   {
-    "saadparwaiz1/cmp_luasnip",
-    dependencies = { "hrsh7th/nvim-cmp", "L3MON4D3/LuaSnip" },
+    "saghen/blink.cmp",
+    version = "1.*",
+    event = "VimEnter",
+    dependencies = {
+      "saghen/blink.lib",
+      "L3MON4D3/LuaSnip",
+    },
+    build = ":BlinkCmp build",
+    opts = {
+      keymap = {
+        preset = "default",
+        ["<CR>"] = { "select_and_accept", "fallback" },
+      },
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "mono",
+      },
+      completion = {
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
+          },
+        },
+        menu = {
+          auto_show = true,
+          draw = {
+            columns = {
+              { "label", "label_description", gap = 1 },
+              { "kind_icon", "kind" },
+            },
+          },
+        },
+        documentation = {
+          auto_show = false,
+          auto_show_delay_ms = 500,
+        },
+      },
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
+      snippets = {
+        preset = "luasnip",
+      },
+      signature = {
+        enabled = true,
+      },
+    },
   },
   { "j-hui/fidget.nvim" },
   {

@@ -9,11 +9,10 @@ require("telescope").setup({
     },
   },
   extensions = {
+    ["ui-select"] = require("telescope.themes").get_dropdown(),
     file_browser = {
       theme = "ivy",
       hijack_netrw = false,
-      path = vim.loop.cwd(),
-      cwd = vim.loop.cwd(),
       cwd_to_path = false,
       grouped = false,
       files = true,
@@ -74,4 +73,6 @@ require("telescope").setup({
   },
 })
 
+pcall(require("telescope").load_extension, "fzf")
+pcall(require("telescope").load_extension, "ui-select")
 require("telescope").load_extension("file_browser")

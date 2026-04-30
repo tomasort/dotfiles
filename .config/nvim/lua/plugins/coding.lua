@@ -1,5 +1,3 @@
-local map = vim.keymap.set
-
 return {
   { "tpope/vim-commentary" },
   { "tpope/vim-surround" },
@@ -13,6 +11,7 @@ return {
   },
   {
     "windwp/nvim-autopairs",
+    event = "InsertEnter",
     config = function()
       require("nvim-autopairs").setup({
         map_cr = true,
@@ -22,18 +21,22 @@ return {
   },
   {
     "folke/todo-comments.nvim",
+    event = "VimEnter",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("todo-comments").setup({})
-
-      map("n", "]t", function()
-        require("todo-comments").jump_next()
-      end, { desc = "Next todo comment" })
-
-      map("n", "[t", function()
-        require("todo-comments").jump_prev()
-      end, { desc = "Previous todo comment" })
     end,
+  },
+  {
+    "nvim-mini/mini.ai",
+    event = "VeryLazy",
+    opts = {
+      mappings = {
+        around_next = "aa",
+        inside_next = "ii",
+      },
+      n_lines = 500,
+    },
   },
   {
     "milanglacier/yarepl.nvim",

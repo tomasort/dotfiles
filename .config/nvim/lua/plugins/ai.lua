@@ -1,12 +1,46 @@
-local map = vim.keymap.set
 local silent = { silent = true }
 
 return {
+  {
+    "nickjvandyke/opencode.nvim",
+    version = "*",
+    keys = {
+      {
+        "<leader>oa",
+        function()
+          require("opencode").ask("@this: ", { submit = true })
+        end,
+        mode = { "n", "x" },
+        desc = "Ask OpenCode about selection",
+      },
+      {
+        "<leader>os",
+        function()
+          require("opencode").select()
+        end,
+        desc = "Open OpenCode action picker",
+      },
+      {
+        "<leader>ot",
+        function()
+          require("opencode").toggle()
+        end,
+        mode = { "n", "t" },
+        desc = "Toggle OpenCode",
+      },
+    },
+    config = function()
+      vim.g.opencode_opts = {}
+    end,
+  },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "zbirenbaum/copilot.lua",
+    },
+    keys = {
+      { "<leader>cc", "<Cmd>CopilotChat<CR>", desc = "Open Copilot Chat" },
     },
     config = function()
       require("CopilotChat").setup({
@@ -19,8 +53,8 @@ return {
             insert = "<C-c>",
           },
           reset = {
-            normal = "<leader-l>",
-            insert = "<leader-l>",
+            normal = "<leader>l",
+            insert = "<leader>l",
           },
         },
         model = "gpt-4.1",
@@ -39,7 +73,7 @@ return {
         },
       })
 
-      map("i", "<Tab>", function()
+      vim.keymap.set("i", "<Tab>", function()
         if require("copilot.suggestion").is_visible() then
           require("copilot.suggestion").accept()
         else

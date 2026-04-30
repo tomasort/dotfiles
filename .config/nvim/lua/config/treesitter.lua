@@ -13,10 +13,12 @@ local languages = {
   "typescript",
   "tsx",
   "json",
+  "query",
   "sql",
   "xml",
   "yaml",
   "lua",
+  "luadoc",
   "vim",
   "vimdoc",
   "markdown",
@@ -39,9 +41,20 @@ require("nvim-treesitter").setup({
 
 require("nvim-treesitter").install(languages)
 
+local function treesitter_try_attach(bufnr, filetype)
+  local language = vim.treesitter.language.get_lang(filetype) or filetype
+  if not pcall(vim.treesitter.start, bufnr, language) then
+    return
+  end
+
+  if vim.treesitter.query.get(language, "indents") ~= nil then
+    vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end
+end
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "*",
   callback = function(args)
-    pcall(vim.treesitter.start, args.buf)
+    treesitter_try_attach(args.buf, args.match)
   end,
 })
