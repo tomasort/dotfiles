@@ -115,6 +115,7 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     opts = {
+      restart_highlighter = true,
       completions = {
         lsp = {
           enabled = true,

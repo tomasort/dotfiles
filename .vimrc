@@ -149,4 +149,3 @@ if !has('nvim')
 	inoremap {{     {
 	inoremap {}     {}
 endif
-

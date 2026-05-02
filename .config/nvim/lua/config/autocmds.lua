@@ -16,3 +16,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
 })
+
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   group = vim.api.nvim_create_augroup("oil_directory_open", { clear = true }),
+--   callback = function()
+--     local path = vim.fn.argv(0)
+--     if path ~= "" and vim.fn.isdirectory(path) == 1 then
+--       vim.cmd("Oil " .. vim.fn.fnameescape(path))
+--     end
+--   end,
+-- })
