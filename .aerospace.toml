@@ -123,6 +123,12 @@ end tell'
 '''
 
 ctrl-shift-b = "exec-and-forget osascript -e 'tell application \"Brave Browser\" to make new window'"
+ctrl-shift-n = '''exec-and-forget osascript -e '
+tell application "Finder"
+    make new Finder window
+    activate
+end tell'
+'''
 
 # Go into iterm2 and do ssh to the odroid machine in my local network
 ctrl-shift-o = '''exec-and-forget osascript -e '
@@ -145,6 +151,8 @@ tell application "iTerm"
     activate
 end tell'
 '''
+
+
 
 
 
@@ -237,3 +245,15 @@ ctrl-shift-h = ['join-with left', 'mode main']
 ctrl-shift-j = ['join-with down', 'mode main']
 ctrl-shift-k = ['join-with up', 'mode main']
 ctrl-shift-l = ['join-with right', 'mode main']
+
+[workspace-to-monitor-force-assignment]
+    1 = 'main'
+    2 = 'main'
+    3 = 'main'
+    4 = 'main'
+    5 = 'main'
+
+    6 = 'secondary'
+    7 = 'secondary'
+    8 = 'secondary'
+    9 = 'secondary'

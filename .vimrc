@@ -14,7 +14,7 @@ set showmode            " show INSERT, VISUAL, etc. mode
 set showmatch           " show matching brackets
 set autoindent smartindent  " auto/smart indent
 set smarttab            " better backspace and tab functionality
-set scrolloff=8         " show at least 8 lines above/below
+set scrolloff=10         " show at least 8 lines above/below
 set mouse=a
 set ruler
 set laststatus=2
@@ -32,9 +32,11 @@ set visualbell          " but leave on a visual bell
 set hlsearch            " highlighted search results
 set incsearch           " incremental search
 set splitright
+set splitbelow
 set lazyredraw
 set foldmethod=indent
 set foldnestmax=2
+set foldlevel=99
 set foldlevelstart=99
 
 if exists('+formatoptions')
@@ -72,11 +74,19 @@ endif
 let g:netrw_liststyle = 1
 let g:netrw_sort_by = 'exten'  " Case-insensitive sorting by name
 
-autocmd BufReadPost,FileReadPost * normal zR
+augroup open_folds_by_default
+	autocmd!
+	autocmd BufReadPost,FileReadPost * setlocal foldlevel=99
+augroup END
 
 filetype on             " enable filetype detection
 filetype indent on      " enable filetype-specific indenting
 filetype plugin on      " enable filetype-specific plugins
+
+augroup disable_comment_continuation
+	autocmd!
+	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+augroup END
 
 let mapleader = ' '
 
@@ -85,7 +95,7 @@ let mapleader = ' '
 " highlight ColorColumn ctermbg=235 guibg=#001D2F
 
 " reload the active config entrypoint
-nnoremap <leader><CR> :source $MYVIMRC<CR>:nohl<CR>
+nnoremap <leader><CR> :source ~/.vimrc<CR>:nohl<CR>
 
 " Redraw screen and remove search highlighting
 nnoremap <C-L> :nohl<CR><C-L>
@@ -148,4 +158,8 @@ if !has('nvim')
 	inoremap {<CR>  {<CR>}<Esc>O
 	inoremap {{     {
 	inoremap {}     {}
+endif
+
+if !has('nvim')
+    nnoremap - :Ex<CR>
 endif
