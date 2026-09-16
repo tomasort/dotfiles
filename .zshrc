@@ -326,9 +326,9 @@ vf() {
 }
 # end of fzf utilities
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# after lazy.nvim opens nvim the first time, mason-tool-installer installs them
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -339,3 +339,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Added by codebase-memory-mcp install
 export PATH="/Users/tomasortega/.local/bin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

@@ -302,6 +302,10 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = vim.tbl_keys(servers),
 				automatic_installation = false,
+				-- stylua/ruff are installed by mason-tool-installer as plain
+				-- formatter tools; auto-enable would otherwise start them as
+				-- LSP servers too (stylua --lsp, ruff server)
+				automatic_enable = { exclude = { "ruff", "stylua" } },
 			})
 
 			-- Neovim >= 0.11: servers are configured with vim.lsp.config(name, opts)

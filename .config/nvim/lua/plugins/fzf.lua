@@ -80,24 +80,127 @@ return {
 			fzf.setup(opts)
 		end,
 		keys = {
-			{ "<leader>ff", function() require("fzf-lua").files({ cwd = project_root() }) end, desc = "Find Files in project root" },
-			{ "<leader>fg", function() require("fzf-lua").live_grep({ cwd = project_root(), hidden = true }) end, desc = "Live grep in project root" },
-			{ "<leader>fc", function() require("fzf-lua").files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find files in Neovim config directory" },
-			{ "<leader>fh", function() require("fzf-lua").help_tags() end, desc = "Search help" },
-			{ "<leader>fk", function() require("fzf-lua").keymaps() end, desc = "Search keymaps" },
-			{ "<leader>fr", function() require("fzf-lua").resume() end, desc = "Resume last search" },
-			{ "<leader>fb", function() require("fzf-lua").builtin() end, desc = "Search picker menu" },
-			{ "<leader>fC", function() require("fzf-lua").commands() end, desc = "Search commands" },
-			{ "<leader>fw", function() require("fzf-lua").grep_cword() end, desc = "Find current word" },
-			{ "<leader>fW", function() require("fzf-lua").grep_cWORD() end, desc = "Find current WORD" },
-			{ "<leader>fo", function() require("fzf-lua").oldfiles() end, desc = "Search recent files" },
-			{ "<leader>fd", function() require("fzf-lua").diagnostics_document() end, desc = "Search diagnostics" },
-			{ "<leader>fD", function() require("fzf-lua").diagnostics_workspace() end, desc = "Search diagnostics" },
+			{
+				"<leader>ff",
+				function()
+					require("fzf-lua").files({ cwd = project_root() })
+				end,
+				desc = "Find Files in project root",
+			},
+			{
+				"<leader>fc",
+				function()
+					require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
+				end,
+				desc = "Find files in Neovim config directory",
+			},
+			{
+				"<leader>fh",
+				function()
+					require("fzf-lua").help_tags()
+				end,
+				desc = "Search help",
+			},
+			{
+				"<leader>fk",
+				function()
+					require("fzf-lua").keymaps()
+				end,
+				desc = "Search keymaps",
+			},
+			{
+				"<leader>fr",
+				function()
+					require("fzf-lua").resume()
+				end,
+				desc = "Resume last search",
+			},
+			{
+				"<leader>fb",
+				function()
+					require("fzf-lua").builtin()
+				end,
+				desc = "Search picker menu",
+			},
+			{
+				"<leader>fC",
+				function()
+					require("fzf-lua").commands()
+				end,
+				desc = "Search commands",
+			},
+			{
+				"<leader>fw",
+				function()
+					require("fzf-lua").grep_cword()
+				end,
+				desc = "Find current word",
+			},
+			{
+				"<leader>fW",
+				function()
+					require("fzf-lua").grep_cWORD()
+				end,
+				desc = "Find current WORD",
+			},
+			{
+				"<leader>fo",
+				function()
+					require("fzf-lua").oldfiles()
+				end,
+				desc = "Search recent files",
+			},
+			{
+				"<leader>fd",
+				function()
+					require("fzf-lua").diagnostics_document()
+				end,
+				desc = "Search diagnostics",
+			},
+			{
+				"<leader>fD",
+				function()
+					require("fzf-lua").diagnostics_workspace()
+				end,
+				desc = "Search diagnostics",
+			},
+			{
+				"<leader>fg",
+				function()
+					require("fzf-lua").live_grep({ cwd = project_root(), hidden = true })
+				end,
+				desc = "Live grep in project root",
+			},
 
-			{ "<leader>/", function() require("fzf-lua").lgrep_curbuf() end, desc = "Live grep the current buffer" },
+			{
+				"<leader>/",
+				function()
+					require("fzf-lua").lgrep_curbuf()
+				end,
+				desc = "Live grep the current buffer",
+			},
 
-			{ "<leader>b", function() require("fzf-lua").buffers() end, desc = "Show buffers" },
-
+			{
+				"<leader>b",
+				function()
+					require("fzf-lua").buffers()
+				end,
+				desc = "Show buffers",
+			},
+			{
+				"<leader>b",
+				function()
+					require("fzf-lua").buffers()
+				end,
+				desc = "Show buffers",
+			},
+			{
+				"<leader>gd",
+				function()
+					require("fzf-lua").buffers()
+				end,
+				desc = "Show buffers",
+			},
 		},
 	},
 }

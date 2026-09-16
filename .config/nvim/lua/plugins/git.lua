@@ -11,6 +11,15 @@ return {
 		"lewis6991/gitsigns.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		opts = {
+			-- inline blame on the current line (extmark virt-text) instead
+			-- of gitsigns' floating blame window
+			current_line_blame = true,
+			current_line_blame_opts = {
+				delay = 300,
+				virt_text = true,
+				virt_text_pos = "eol", -- "eol" | "overlay" | "right_align"
+				ignore_blank = false,
+			},
 			on_attach = function(bufnr)
 				local gitsigns = require("gitsigns")
 
