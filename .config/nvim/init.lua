@@ -18,6 +18,7 @@ if vim.fn.isdirectory(undodir) == 0 then
 end
 vim.opt.undodir = undodir
 vim.opt.undofile = true
+vim.opt.showmode = false
 vim.opt.undolevels = 10000
 vim.opt.undoreload = 100000
 

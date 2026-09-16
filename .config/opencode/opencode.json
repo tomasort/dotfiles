@@ -1,0 +1,488 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "obsidian": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "mcp-obsidian",
+        "/Users/tomasortega/Documents/Obsidian Vault"
+      ]
+    },
+    "mcp-toolkit": {
+      "type": "local",
+      "command": [
+        "docker",
+        "mcp",
+        "gateway",
+        "run",
+        "--profile",
+        "profile"
+      ],
+      "enabled": false
+    },
+    "browsermcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@browsermcp/mcp@latest"
+      ],
+      "enabled": true
+    },
+    "brave-search-mcp-server": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@brave/brave-search-mcp-server"
+      ],
+      "environment": {
+        "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
+      }
+    },
+    "fetch": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "mcp-server-fetch@2026.7.10",
+        "--with",
+        "mcp<2",
+        "mcp-server-fetch"
+      ],
+      "enabled": true
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_TOKEN}"
+      }
+    },
+    "playwrite": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    },
+    "everything": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ]
+    },
+    "excel": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uvx",
+        "excel-mcp-server",
+        "stdio"
+      ]
+    },
+    "filesystem": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/tomasortega/Projects"
+      ]
+    },
+    "git": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "uvx",
+        "mcp-server-git"
+      ]
+    },
+    "mcp-mermaid": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "mcp-mermaid"
+      ]
+    },
+    "memory": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "sequentialthinking": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "time": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "uvx",
+        "mcp-server-time"
+      ]
+    },
+    "auto-browser": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8000/mcp",
+      "enabled": true
+    },
+    "firecrawl": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "npx",
+        "-y",
+        "firecrawl-mcp"
+      ],
+      "environment": {
+        "FIRECRAWL_API_KEY": ""
+      }
+    },
+    "webreaper": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8080/",
+      "headers": {
+        "Authorization": "Bearer {env:WEBREAPER_KEY}"
+      },
+      "enabled": true
+    },
+    "bilibili": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "bilibili-mcp-js"
+      ]
+    },
+    "anyquery": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "anyquery",
+        "mcp",
+        "--stdio"
+      ]
+    },
+    "emailmd": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "emailmd",
+        "mcp"
+      ]
+    },
+    "pdf-reader": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@sylphx/pdf-reader-mcp"
+      ]
+    },
+    "mineru-qmd": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "qmd",
+        "mcp"
+      ]
+    },
+    "ebook-mcp": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uv",
+        "--directory",
+        "/Users/tomasortega/Projects/ebook-mcp/src/ebook_mcp",
+        "run",
+        "main.py"
+      ]
+    },
+    "scrapling": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "scrapling",
+        "mcp"
+      ]
+    },
+    "headroom": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "headroom",
+        "mcp",
+        "serve"
+      ]
+    },
+    "context7": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--no-usage-statistics"
+      ]
+    },
+    "codebase-memory-mcp": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "/Users/tomasortega/.local/bin/codebase-memory-mcp"
+      ]
+    },
+    "annas-mcp": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "/Users/tomasortega/.local/bin/annas-mcp",
+        "mcp"
+      ],
+      "environment": {
+        "ANNAS_SECRET_KEY": "{env:ANNAS_SECRET_KEY}",
+        "ANNAS_DOWNLOAD_PATH": "/Users/tomasortega/Downloads"
+      }
+    },
+    "anki-mcp": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@ankimcp/anki-mcp-server",
+        "--stdio"
+      ],
+      "environment": {
+        "ANKI_CONNECT_URL": "http://localhost:8765"
+      }
+    },
+    "trendradar": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uv",
+        "--directory",
+        "/Users/tomasortega/Projects/TrendRadar",
+        "run",
+        "python",
+        "-m",
+        "mcp_server.server"
+      ]
+    },
+    "postgres": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@yawlabs/postgres-mcp@latest"
+      ],
+      "environment": {
+        "DATABASE_URL": "postgres://tomasortega@localhost:5432/postgres"
+      }
+    },
+    "openowl": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "npx",
+        "-y",
+        "openowl"
+      ]
+    },
+    "penpot": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "npx",
+        "-y",
+        "@penpot/mcp@latest"
+      ]
+    },
+    "gpt-researcher": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "/Users/tomasortega/Projects/gptr-mcp/.venv/bin/python",
+        "/Users/tomasortega/Projects/gptr-mcp/server.py"
+      ],
+      "environment": {
+        "OPENAI_API_KEY": "{env:OPENAI_API_KEY}",
+        "TAVILY_API_KEY": "{env:TAVILY_API_KEY}"
+      }
+    },
+    "ghidra": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "python3",
+        "/Users/tomasortega/Projects/GhidraMCP/bridge_mcp_ghidra.py"
+      ]
+    },
+    "arxiv": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "uvx",
+        "arxiv-mcp-server"
+      ]
+    },
+    "whatsapp": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "uv",
+        "--directory",
+        "/Users/tomasortega/Projects/whatsapp-mcp/whatsapp-mcp-server",
+        "run",
+        "main.py"
+      ]
+    },
+    "fli": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "fli-mcp"
+      ]
+    },
+    "shadcn-ui": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@jpisnice/shadcn-ui-mcp-server"
+      ]
+    },
+    "wikipedia": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "wikipedia-mcp-server"
+      ]
+    },
+    "semanticscholar": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@xbghc/semanticscholar-mcp"
+      ]
+    },
+    "pubmed": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@cyanheads/pubmed-mcp-server"
+      ]
+    },
+    "exa": {
+      "type": "local",
+      "enabled": false,
+      "command": [
+        "npx",
+        "-y",
+        "exa-mcp-server"
+      ],
+      "environment": {
+        "EXA_API_KEY": "{env:EXA_API_KEY}"
+      }
+    },
+    "firefox-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "--yes",
+        "@mozilla/firefox-devtools-mcp@latest"
+      ],
+      "environment": {
+        "npm_config_userconfig": "/dev/null"
+      },
+      "enabled": true
+    },
+    "mac-monitor": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "git+https://github.com/Pratyay/mac-monitor-mcp.git",
+        "--with",
+        "mcp<2",
+        "mac-monitor"
+      ],
+      "enabled": true
+    },
+    "spreadsheet": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "/Users/tomasortega/Projects:/data",
+        "ghcr.io/psu3d0/spreadsheet-mcp:latest-full",
+        "--workspace-root",
+        "/data",
+        "--transport",
+        "stdio"
+      ],
+      "enabled": false
+    },
+    "docker-mcp": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "git+https://github.com/QuantGeekDev/docker-mcp.git",
+        "--with",
+        "mcp<2",
+        "docker-mcp"
+      ],
+      "enabled": true
+    }
+  }
+}

@@ -8,6 +8,9 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Per-machine / private settings (git-ignored): keep secrets here, e.g.
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
 # path to go
 export PATH=$PATH:/usr/local/go/bin
 # Path to your Oh My Zsh installation.
@@ -333,3 +336,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Added by codebase-memory-mcp install
+export PATH="/Users/tomasortega/.local/bin:$PATH"

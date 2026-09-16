@@ -1,0 +1,30 @@
+return {
+	-- 	{
+	-- 		"numToStr/FTerm.nvim",
+	-- 		opts = {
+	-- 			border = "single",
+	-- 			dimensions = {
+	-- 				height = 0.8,
+	-- 				width = 0.8,
+	-- 			},
+	-- 		},
+	-- 		config = function(_, opts)
+	-- 			require("FTerm").setup(opts)
+	-- 		end,
+	-- 		keys = {
+	-- 			{ "<leader>z", "<Cmd>lua require('FTerm').open()<CR>", desc = "Open floating terminal" },
+	-- 			{
+	-- 				"<Esc>",
+	-- 				"<C-\\><C-n><Cmd>lua require('FTerm').close()<CR>",
+	-- 				mode = "t",
+	-- 				desc = "Close floating terminal",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- {
+	--     "milanglacier/yarepl.nvim",
+	--     config = function()
+	--         require("yarepl").setup({})
+	--     end,
+	-- },
+}

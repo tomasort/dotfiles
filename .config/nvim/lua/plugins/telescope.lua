@@ -1,0 +1,115 @@
+return {
+	-- Telescope (fully commented out: replaced by fzf-lua in plugins/fzf.lua).
+	-- To switch back: uncomment this whole file and disable the keymaps
+	-- in plugins/fzf.lua so they don't collide.
+	--
+	-- {
+	-- 	"nvim-telescope/telescope.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-tree/nvim-web-devicons",
+	-- 		{ "nvim-telescope/telescope-file-browser.nvim" },
+	-- 		{ "nvim-telescope/telescope-ui-select.nvim" },
+	-- 	},
+	-- 	keys = {
+	-- 		-- Files & grep
+	-- 		{ "<leader>ff", function() require("telescope.builtin").find_files() end, desc = "Find Files in project" },
+	-- 		{ "<leader>fg", function() require("telescope.builtin").live_grep() end, desc = "Live grep in project" },
+	-- 		{ "<leader>fc", function() require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find files in Neovim config directory" },
+	-- 		-- Pickers from the fzf-lua set
+	-- 		{ "<leader>fh", function() require("telescope.builtin").help_tags() end, desc = "Search help" },
+	-- 		{ "<leader>fk", function() require("telescope.builtin").keymaps() end, desc = "Search keymaps" },
+	-- 		{ "<leader>fr", function() require("telescope.builtin").resume() end, desc = "Resume last search" },
+		-- 		{ "<leader>fC", function() require("telescope.builtin").commands() end, desc = "Search commands" },
+		-- 		{ "<leader>b", function() require("telescope.builtin").buffers() end, desc = "Show buffers" },
+		-- 		-- Old file_browser keymap (browse starting at the current file's dir)
+		-- 		-- { "<leader>fb", "<cmd>Telescope file_browser path=%:p:h<CR>", desc = "Open file browser" },
+		-- 		-- Old "search" group (from keymaps.lua, Telescope era)
+		-- 		{ "<leader>ss", function() require("telescope.builtin").builtin() end, desc = "Search picker menu" },
+		-- 		{ "<leader>sw", function() require("telescope.builtin").grep_string() end, mode = { "n", "v" }, desc = "Search current word" },
+		-- 		{ "<leader>sd", function() require("telescope.builtin").diagnostics() end, desc = "Search diagnostics" },
+		-- 		{ "<leader>s.", function() require("telescope.builtin").oldfiles() end, desc = "Search recent files" },
+		-- 		-- Old TodoTelescope keymap (requires folke/todo-comments.nvim, not currently installed)
+		-- 		-- { "<leader>td", "<Cmd>TodoTelescope keywords=TODO,FIX<CR>", desc = "Show TODO picker" },
+		-- 	},
+	-- 	config = function()
+	-- 		local fb_actions = require("telescope._extensions.file_browser.actions")
+	--
+	-- 		require("telescope").setup({
+	-- 			defaults = {
+	-- 				mappings = {
+	-- 					i = {
+	-- 						["<C-h>"] = "which_key",
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 			extensions = {
+	-- 				["ui-select"] = require("telescope.themes").get_dropdown(),
+	-- 				file_browser = {
+	-- 					theme = "ivy",
+	-- 					hijack_netrw = false,
+	-- 					cwd_to_path = false,
+	-- 					grouped = false,
+	-- 					files = true,
+	-- 					add_dirs = true,
+	-- 					depth = 4,
+	-- 					auto_depth = false,
+	-- 					select_buffer = false,
+	-- 					hidden = { file_browser = false, folder_browser = false },
+	-- 					respect_gitignore = vim.fn.executable("fd") == 1,
+	-- 					no_ignore = false,
+	-- 					follow_symlinks = false,
+	-- 					browse_files = require("telescope._extensions.file_browser.finders").browse_files,
+	-- 					browse_folders = require("telescope._extensions.file_browser.finders").browse_folders,
+	-- 					hide_parent_dir = false,
+	-- 					collapse_dirs = false,
+	-- 					prompt_path = false,
+	-- 					quiet = false,
+	-- 					dir_icon = "",
+	-- 					dir_icon_hl = "Default",
+	-- 					display_stat = { date = true, size = true, mode = true },
+	-- 					use_fd = true,
+	-- 					git_status = true,
+	-- 					mappings = {
+	-- 						i = {
+	-- 							["<A-c>"] = fb_actions.create,
+	-- 							["<S-CR>"] = fb_actions.create_from_prompt,
+	-- 							["<A-r>"] = fb_actions.rename,
+	-- 							["<A-m>"] = fb_actions.move,
+	-- 							["<A-y>"] = fb_actions.copy,
+	-- 							["<A-d>"] = fb_actions.remove,
+	-- 							["<C-o>"] = fb_actions.open,
+	-- 							["<C-g>"] = fb_actions.goto_parent_dir,
+	-- 							["<C-e>"] = fb_actions.goto_home_dir,
+	-- 							["<C-w>"] = fb_actions.goto_cwd,
+	-- 							["<C-t>"] = fb_actions.change_cwd,
+	-- 							["<C-f>"] = fb_actions.toggle_browser,
+	-- 							["<C-h>"] = fb_actions.toggle_hidden,
+	-- 							["<C-s>"] = fb_actions.toggle_all,
+	-- 							["<bs>"] = fb_actions.backspace,
+	-- 						},
+	-- 						n = {
+	-- 							c = fb_actions.create,
+	-- 							r = fb_actions.rename,
+	-- 							m = fb_actions.move,
+	-- 							y = fb_actions.copy,
+	-- 							d = fb_actions.remove,
+	-- 							o = fb_actions.open,
+	-- 							g = fb_actions.goto_parent_dir,
+	-- 							e = fb_actions.goto_home_dir,
+	-- 							w = fb_actions.goto_cwd,
+	-- 							t = fb_actions.change_cwd,
+	-- 							f = fb_actions.toggle_browser,
+	-- 							h = fb_actions.toggle_hidden,
+	-- 							s = fb_actions.toggle_all,
+	-- 						},
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	--
+	-- 		pcall(require("telescope").load_extension, "fzf")
+	-- 		pcall(require("telescope").load_extension, "ui-select")
+	-- 		require("telescope").load_extension("file_browser")
+	-- 	end,
+	-- },
+}

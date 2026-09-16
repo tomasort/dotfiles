@@ -5,3 +5,6 @@
 .config/cheat/cheatsheets/community
 
 .ipython/profile_default/history.sqlite
+
+# Local secrets (sourced by .zshrc, never committed)
+.zshrc.local

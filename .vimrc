@@ -39,33 +39,17 @@ set foldnestmax=2
 set foldlevel=99
 set foldlevelstart=99
 
-if exists('+formatoptions')
-	set formatoptions+=j  " Delete comment character when joining commented lines
-endif
+set formatoptions+=j  " Delete comment character when joining commented lines
+set sidescrolloff=5
+set updatetime=50
+set signcolumn=yes
+set breakindent
 
-if exists('+sidescrolloff')
-	set sidescrolloff=5
-endif
-
-if exists('+updatetime')
-	set updatetime=50
-endif
-
-if exists('+signcolumn')
-	set signcolumn=yes
-endif
-
-if exists('+breakindent')
-	set breakindent
-endif
-
-if exists('+clipboard') && has('clipboard')
+if has('clipboard')
 	set clipboard=unnamed   " allow yy, etc. to interact with OS X clipboard
 endif
 
-if exists('+termguicolors')
-	set termguicolors       " enable true colors support when available
-endif
+set termguicolors       " enable true colors support when available
 
 if has('gui_macvim')
 	set guioptions=aAace    " don't show scrollbar in MacVim

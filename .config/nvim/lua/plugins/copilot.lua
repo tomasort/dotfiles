@@ -1,0 +1,32 @@
+return {
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	-- Ghost-text suggestions; manual-only (see README note about
+	-- 	-- auto_trigger below). Loads on first insert like minuet.
+	-- 	event = "InsertEnter",
+	-- 	opts = {
+	-- 		suggestion = {
+	-- 			enabled = true,
+	-- 			-- TEMPORARY: auto ghost while typing (both engines automatic).
+	-- 			-- To revert to manual-only, set this back to `false`; ghost
+	-- 			-- suggestions then appear only when you press <C-y>.
+	-- 			auto_trigger = true,
+	-- 			keymap = {
+	-- 				accept = "<C-y>", -- no suggestion? no-op (auto-triggerpath)
+	-- 				accept_word = false,
+	-- 				accept_line = false,
+	-- 				next = false,
+	-- 				prev = false,
+	-- 				dismiss = "<C-]>",
+	-- 				toggle_auto_trigger = false,
+	-- 			},
+	-- 		},
+	-- 		panel = { enabled = false },
+	-- 		filetypes = {
+	-- 			markdown = false,
+	-- 			yaml = false,
+	-- 			help = false,
+	-- 		},
+	-- 	},
+	-- },
+}
