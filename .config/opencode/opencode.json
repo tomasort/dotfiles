@@ -370,6 +370,10 @@
   },
   "permission": {
     "bash": {
+      "*rm *": "ask",
+      "*rm": "ask",
+      "*rmdir *": "ask",
+      "*shred *": "ask",
       "*tmux kill-server*": "deny",
       "*tmux kill-session*": "deny",
       "*tmux kill-window*": "deny",
