@@ -30,14 +30,18 @@ local function ssh_config_hosts()
 	return hosts
 end
 
+local function ui_input(prompt, default, cb)
+	-- goes through snacks.nvim's floating, centered input window when its
+	-- `input` module is enabled, falling back to the command line otherwise
+	vim.ui.input({ prompt = prompt, default = default }, function(value)
+		cb(value and value ~= "" and value or nil)
+	end)
+end
+
 local function pick(items, prompt, cb)
 	local ok, fzf = pcall(require, "fzf-lua")
 	if not ok then
-		local choice = vim.fn.input(prompt .. " [" .. (items[1] or "") .. "]: ")
-		if choice == "" then
-			choice = items[1]
-		end
-		cb(choice ~= "" and choice or nil)
+		ui_input(prompt, items[1], cb)
 		return
 	end
 	fzf.fzf_exec(items, {
@@ -63,10 +67,12 @@ local function remote_dirs(host)
 	end
 	local dirs = {}
 	for _, d in ipairs(out) do
-		if d ~= "" and d:sub(1, 1) ~= "/" then
-			d = "$HOME/" .. d
+		if d ~= "" then
+			if d:sub(1, 1) ~= "/" then
+				d = "$HOME/" .. d
+			end
+			dirs[#dirs + 1] = d
 		end
-		dirs[#dirs + 1] = d
 	end
 	return dirs
 end
@@ -87,20 +93,10 @@ local function attach(host, dir)
 end
 
 function M.pick()
-	local hosts = ssh_config_hosts()
-	hosts[#hosts + 1] = "✎ type a host manually…"
-
-	pick(hosts, "ssh host", function(host)
-		if not host then
+	local function attach_flow(host, dir)
+		if not host or host == "" then
 			return
 		end
-		if host:find("^✎") then
-			host = vim.fn.input("ssh host (user@ip): ")
-			if host == "" then
-				return
-			end
-		end
-
 		local dirs = remote_dirs(host)
 		dirs[#dirs + 1] = "✎ type a path manually…"
 
@@ -109,13 +105,29 @@ function M.pick()
 				return
 			end
 			if dir:find("^✎") then
-				dir = vim.fn.input("remote dir [$HOME]: ")
-				if dir == "" then
-					dir = "$HOME"
-				end
+				ui_input("remote dir [$HOME]: ", "$HOME", function(typed)
+					attach(host, typed or "$HOME")
+				end)
+			else
+				attach(host, dir)
 			end
-			attach(host, dir)
 		end)
+	end
+
+	local hosts = ssh_config_hosts()
+	hosts[#hosts + 1] = "✎ type a host manually…"
+
+	pick(hosts, "ssh host", function(host)
+		if not host then
+			return
+		end
+		if host:find("^✎") then
+			ui_input("ssh host (user@ip): ", nil, function(typed)
+				attach_flow(typed, nil)
+			end)
+		else
+			attach_flow(host, nil)
+		end
 	end)
 end
 
