@@ -13,33 +13,18 @@
     },
     "mcp-toolkit": {
       "type": "local",
-      "command": [
-        "docker",
-        "mcp",
-        "gateway",
-        "run",
-        "--profile",
-        "profile"
-      ],
+      "command": ["docker", "mcp", "gateway", "run", "--profile", "profile"],
       "enabled": false
     },
     "browsermcp": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@browsermcp/mcp@latest"
-      ],
+      "command": ["npx", "-y", "@browsermcp/mcp@latest"],
       "enabled": true
     },
     "brave-search-mcp-server": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@brave/brave-search-mcp-server"
-      ],
+      "command": ["npx", "-y", "@brave/brave-search-mcp-server"],
       "environment": {
         "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
       }
@@ -68,29 +53,17 @@
     "playwrite": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@playwright/mcp@latest"
-      ]
+      "command": ["npx", "-y", "@playwright/mcp@latest"]
     },
     "everything": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-everything"
-      ]
+      "command": ["npx", "-y", "@modelcontextprotocol/server-everything"]
     },
     "excel": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "uvx",
-        "excel-mcp-server",
-        "stdio"
-      ]
+      "command": ["uvx", "excel-mcp-server", "stdio"]
     },
     "filesystem": {
       "type": "local",
@@ -105,28 +78,17 @@
     "git": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "uvx",
-        "mcp-server-git"
-      ]
+      "command": ["uvx", "mcp-server-git"]
     },
     "mcp-mermaid": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "mcp-mermaid"
-      ]
+      "command": ["npx", "-y", "mcp-mermaid"]
     },
     "memory": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ]
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"]
     },
     "sequentialthinking": {
       "type": "local",
@@ -140,10 +102,7 @@
     "time": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "uvx",
-        "mcp-server-time"
-      ]
+      "command": ["uvx", "mcp-server-time"]
     },
     "auto-browser": {
       "type": "remote",
@@ -153,11 +112,7 @@
     "firecrawl": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "npx",
-        "-y",
-        "firecrawl-mcp"
-      ],
+      "command": ["npx", "-y", "firecrawl-mcp"],
       "environment": {
         "FIRECRAWL_API_KEY": ""
       }
@@ -173,47 +128,27 @@
     "bilibili": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "bilibili-mcp-js"
-      ]
+      "command": ["npx", "-y", "bilibili-mcp-js"]
     },
     "anyquery": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "anyquery",
-        "mcp",
-        "--stdio"
-      ]
+      "command": ["anyquery", "mcp", "--stdio"]
     },
     "emailmd": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "emailmd",
-        "mcp"
-      ]
+      "command": ["npx", "-y", "emailmd", "mcp"]
     },
     "pdf-reader": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@sylphx/pdf-reader-mcp"
-      ]
+      "command": ["npx", "-y", "@sylphx/pdf-reader-mcp"]
     },
     "mineru-qmd": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "qmd",
-        "mcp"
-      ]
+      "command": ["qmd", "mcp"]
     },
     "ebook-mcp": {
       "type": "local",
@@ -229,28 +164,17 @@
     "scrapling": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "scrapling",
-        "mcp"
-      ]
+      "command": ["scrapling", "mcp"]
     },
     "headroom": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "headroom",
-        "mcp",
-        "serve"
-      ]
+      "command": ["headroom", "mcp", "serve"]
     },
     "context7": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@upstash/context7-mcp"
-      ]
+      "command": ["npx", "-y", "@upstash/context7-mcp"]
     },
     "chrome-devtools": {
       "type": "local",
@@ -265,17 +189,12 @@
     "codebase-memory-mcp": {
       "enabled": true,
       "type": "local",
-      "command": [
-        "/Users/tomasortega/.local/bin/codebase-memory-mcp"
-      ]
+      "command": ["/Users/tomasortega/.local/bin/codebase-memory-mcp"]
     },
     "annas-mcp": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "/Users/tomasortega/.local/bin/annas-mcp",
-        "mcp"
-      ],
+      "command": ["/Users/tomasortega/.local/bin/annas-mcp", "mcp"],
       "environment": {
         "ANNAS_SECRET_KEY": "{env:ANNAS_SECRET_KEY}",
         "ANNAS_DOWNLOAD_PATH": "/Users/tomasortega/Downloads"
@@ -284,12 +203,7 @@
     "anki-mcp": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@ankimcp/anki-mcp-server",
-        "--stdio"
-      ],
+      "command": ["npx", "-y", "@ankimcp/anki-mcp-server", "--stdio"],
       "environment": {
         "ANKI_CONNECT_URL": "http://localhost:8765"
       }
@@ -310,32 +224,20 @@
     "postgres": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@yawlabs/postgres-mcp@latest"
-      ],
+      "command": ["npx", "-y", "@yawlabs/postgres-mcp@latest"],
       "environment": {
-        "DATABASE_URL": "postgres://tomasortega@localhost:5432/postgres"
+        "DATABASE_URL": "{env:DATABASE_URL}"
       }
     },
     "openowl": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "npx",
-        "-y",
-        "openowl"
-      ]
+      "command": ["npx", "-y", "openowl"]
     },
     "penpot": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "npx",
-        "-y",
-        "@penpot/mcp@latest"
-      ]
+      "command": ["npx", "-y", "@penpot/mcp@latest"]
     },
     "gpt-researcher": {
       "type": "local",
@@ -360,10 +262,7 @@
     "arxiv": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "uvx",
-        "arxiv-mcp-server"
-      ]
+      "command": ["uvx", "arxiv-mcp-server"]
     },
     "whatsapp": {
       "type": "local",
@@ -379,65 +278,39 @@
     "fli": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "fli-mcp"
-      ]
+      "command": ["fli-mcp"]
     },
     "shadcn-ui": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@jpisnice/shadcn-ui-mcp-server"
-      ]
+      "command": ["npx", "-y", "@jpisnice/shadcn-ui-mcp-server"]
     },
     "wikipedia": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "wikipedia-mcp-server"
-      ]
+      "command": ["npx", "-y", "wikipedia-mcp-server"]
     },
     "semanticscholar": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@xbghc/semanticscholar-mcp"
-      ]
+      "command": ["npx", "-y", "@xbghc/semanticscholar-mcp"]
     },
     "pubmed": {
       "type": "local",
       "enabled": true,
-      "command": [
-        "npx",
-        "-y",
-        "@cyanheads/pubmed-mcp-server"
-      ]
+      "command": ["npx", "-y", "@cyanheads/pubmed-mcp-server"]
     },
     "exa": {
       "type": "local",
       "enabled": false,
-      "command": [
-        "npx",
-        "-y",
-        "exa-mcp-server"
-      ],
+      "command": ["npx", "-y", "exa-mcp-server"],
       "environment": {
         "EXA_API_KEY": "{env:EXA_API_KEY}"
       }
     },
     "firefox-devtools": {
       "type": "local",
-      "command": [
-        "npx",
-        "--yes",
-        "@mozilla/firefox-devtools-mcp@latest"
-      ],
+      "command": ["npx", "--yes", "@mozilla/firefox-devtools-mcp@latest"],
       "environment": {
         "npm_config_userconfig": "/dev/null"
       },
@@ -483,6 +356,25 @@
         "docker-mcp"
       ],
       "enabled": true
+    },
+    "reactive-resume": {
+      "type": "remote",
+      "url": "http://localhost:3000/mcp",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "x-api-key": "{env:RR_MCP_API_KEY}"
+      }
+    }
+  },
+  "permission": {
+    "bash": {
+      "*tmux kill-server*": "deny",
+      "*tmux kill-session*": "deny",
+      "*tmux kill-window*": "deny",
+      "*tmux kill-pane*": "deny",
+      "*pkill tmux*": "deny",
+      "*killall tmux*": "deny"
     }
   }
 }

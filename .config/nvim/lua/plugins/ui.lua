@@ -9,7 +9,7 @@ return {
 			vim.api.nvim_set_hl(0, "LineNr", { fg = "#4d5c6d", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "NonText", { fg = "#2b3446", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "SpecialKey", { fg = "#4d5c6d", bg = "NONE" })
-			vim.api.nvim_set_hl(0, "Directory", { fg = "#707c8a", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "Directory", { fg = "#9da9b7", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "LspInlayHint", { fg = "#52749a", italic = true })
 			vim.api.nvim_set_hl(0, "Visual", { bg = "#314365" })
 		end,
@@ -25,7 +25,7 @@ return {
 					[1] = "virtualtext",
 				},
 				virtualtext = {
-					char = " ██ ",
+					char = "██ ",
 					position = "after",
 				},
 			},

@@ -217,11 +217,16 @@ return {
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
 				-- But for many setups, the LSP (`ts_ls`) will work just fine
+				--
+				-- NOTE: ts_ls is intentionally NOT enabled here. TypeScript is served
+				-- by typescript-tools.nvim (see plugins/typescript-tools.lua), which
+				-- is incompatible with ts_ls / typescript-language-server. Running
+				-- both attaches two servers to the same buffer and breaks go-to-def.
 
 				rust_analyzer = {},
-				ts_ls = {},
 				dockerls = {},
 				docker_compose_language_service = {},
+				jsonls = {},
 				arduino_language_server = {},
 				ansiblels = {},
 				cmake = {},
@@ -305,7 +310,12 @@ return {
 				-- stylua/ruff are installed by mason-tool-installer as plain
 				-- formatter tools; auto-enable would otherwise start them as
 				-- LSP servers too (stylua --lsp, ruff server)
-				automatic_enable = { exclude = { "ruff", "stylua" } },
+				--
+				-- ts_ls: TypeScript is served by typescript-tools.nvim (see
+				-- plugins/typescript-tools.lua). mason-lspconfig auto-enables
+				-- every mason-installed server, so ts_ls must be excluded here
+				-- or it starts alongside typescript-tools on the same buffers.
+				automatic_enable = { exclude = { "ruff", "stylua", "ts_ls" } },
 			})
 
 			-- Neovim >= 0.11: servers are configured with vim.lsp.config(name, opts)

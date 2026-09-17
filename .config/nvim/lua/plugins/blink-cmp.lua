@@ -10,6 +10,18 @@ return {
 		"erooke/blink-cmp-latex",
 		-- Maven/Gradle dependency completion (requires curl)
 		"Mestane/blink-cmp-deps",
+		-- environment variable completion ($ trigger)
+		"bydlw98/blink-cmp-env",
+		-- WordNet dictionary/thesaurus completion
+		"archie-judd/blink-cmp-words",
+		-- conventional commit types (gitcommit buffers)
+		"disrupted/blink-cmp-conventional-commits",
+		-- register contents
+		"phanen/blink-cmp-register",
+		-- spellcheck suggestions (spellsuggest)
+		"ribru17/blink-cmp-spell",
+		-- whole-project word completion via ripgrep/git grep
+		{ "mikavilpas/blink-ripgrep.nvim", version = "*" },
 	},
 	build = function()
 		-- build the fuzzy matcher, optionally add a timeout to `pwait(timeout_ms)`
@@ -87,14 +99,14 @@ return {
 				},
 			},
 			ghost_text = { enabled = false },
-		list = {
-			selection = {
-				-- don't auto-select item #1 when the menu opens; keeps <CR>
-				-- mapping's "only accept after explicit selection" honest
-				-- (<C-y> / select_and_accept still works on the first item)
-				preselect = false,
+			list = {
+				selection = {
+					-- don't auto-select item #1 when the menu opens; keeps <CR>
+					-- mapping's "only accept after explicit selection" honest
+					-- (<C-y> / select_and_accept still works on the first item)
+					preselect = false,
+				},
 			},
-		},
 		},
 		-- The text of the documentation will use treesitter? via draw default
 		signature = {
@@ -105,9 +117,79 @@ return {
 		-- (Default) list of enabled providers defined so that you can extend it
 		-- elsewhere in your config, without redefining it, due to `opts_extend`
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer", "css_vars" },
+			default = {
+				"lsp",
+				"path",
+				"snippets",
+				"buffer",
+				"css_vars",
+				"env",
+				"ripgrep",
+				"register",
+				"spell",
+				"conventional_commits",
+			},
 
 			providers = {
+				ripgrep = {
+					module = "blink-ripgrep",
+					name = "Ripgrep",
+					-- git grep backend where available (faster + respects
+					-- tracked files), falls back to rg
+					opts = { backend = { use = "gitgrep-or-ripgrep" } },
+				},
+				register = {
+					name = "Register",
+					module = "blink-cmp-register",
+				},
+				spell = {
+					name = "Spell",
+					module = "blink-cmp-spell",
+					-- only inside treesitter @spell captures (code, prose);
+					-- disabled in @nospell regions
+					enable_in_context = function()
+						local curpos = vim.api.nvim_win_get_cursor(0)
+						local captures = vim.treesitter.get_captures_at_pos(0, curpos[1] - 1, curpos[2] - 1)
+						local in_spell_capture = false
+						for _, cap in ipairs(captures) do
+							if cap.capture == "spell" then
+								in_spell_capture = true
+							elseif cap.capture == "nospell" then
+								return false
+							end
+						end
+						return in_spell_capture
+					end,
+				},
+				conventional_commits = {
+					name = "Conventional Commits",
+					module = "blink-cmp-conventional-commits",
+					-- cheap filetype gate so commit types only show in git
+					-- commit buffers
+					enabled = function()
+						return vim.bo.filetype == "gitcommit"
+					end,
+				},
+				dictionary = {
+					name = "Dictionary",
+					module = "blink-cmp-words.dictionary",
+					opts = { dictionary_search_threshold = 3 },
+				},
+				thesaurus = {
+					name = "Thesaurus",
+					module = "blink-cmp-words.thesaurus",
+				},
+				env = {
+					-- completes your actual shell env vars; triggers on "$"
+					-- so it stays out of the way otherwise
+					name = "Env",
+					module = "blink-cmp-env",
+					opts = {
+						item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
+						show_braces = false,
+						show_documentation_window = true,
+					},
+				},
 				css_vars = {
 					name = "css-vars",
 					module = "css-vars.blink",
@@ -124,12 +206,24 @@ return {
 					module = "blink_deps",
 					async = true,
 				},
+				dadbod = {
+					-- tables/columns autocomplete for sql buffers; enabled via
+					-- sources.per_filetype.sql below. Plugin: vim-dadbod-completion
+					name = "Dadbod",
+					module = "vim_dadbod_completion.blink",
+				},
 			},
 
 			-- only offer the latex source in tex/latex buffers
 			per_filetype = {
-				tex = { "latex", "lsp", "path", "snippets", "buffer" },
-				latex = { "latex", "lsp", "path", "snippets", "buffer" },
+				-- prose: dictionary + thesaurus word/synonym completion
+				tex = { "latex", "lsp", "path", "snippets", "buffer", "dictionary", "thesaurus" },
+				latex = { "latex", "lsp", "path", "snippets", "buffer", "dictionary", "thesaurus" },
+				markdown = { inherit_defaults = true, "dictionary", "thesaurus" },
+				-- sql buffers: default sources + db schema completion
+				sql = { inherit_defaults = true, "dadbod" },
+				mysql = { inherit_defaults = true, "dadbod" },
+				plsql = { inherit_defaults = true, "dadbod" },
 			},
 		},
 

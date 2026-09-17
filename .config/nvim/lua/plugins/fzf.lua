@@ -155,14 +155,14 @@ return {
 				function()
 					require("fzf-lua").diagnostics_document()
 				end,
-				desc = "Search diagnostics",
+				desc = "Search diagnostics (Document)",
 			},
 			{
 				"<leader>fD",
 				function()
 					require("fzf-lua").diagnostics_workspace()
 				end,
-				desc = "Search diagnostics",
+				desc = "Search diagnostics (Workspace)",
 			},
 			{
 				"<leader>fg",
@@ -189,13 +189,6 @@ return {
 			},
 			{
 				"<leader>b",
-				function()
-					require("fzf-lua").buffers()
-				end,
-				desc = "Show buffers",
-			},
-			{
-				"<leader>gd",
 				function()
 					require("fzf-lua").buffers()
 				end,

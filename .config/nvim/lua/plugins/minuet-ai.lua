@@ -48,7 +48,7 @@ return {
 					-- between requests. Ignore ft list below adds a way out for
 					-- noisy/scratch-like filetypes, add freely.
 					auto_trigger_ft = { "*" },
-					auto_trigger_ignore_ft = { "oil", "markdown", "gitcommit" },
+					auto_trigger_ignore_ft = { "oil", "markdown", "gitcommit", "opencode", "lazygit" },
 					-- minuet's own (unconditional) keymaps; fires only when a
 					-- ghost suggestion is on screen, so plain typing is safe.
 					keymap = {
@@ -74,7 +74,7 @@ return {
 			-- own FileType callback at lua/minuet/virtualtext.lua).
 			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 				local ft = vim.bo[buf].filetype
-				if ft ~= "" and not vim.tbl_contains({ "oil", "markdown", "gitcommit" }, ft) then
+				if ft ~= "" and not vim.tbl_contains({ "oil", "markdown", "gitcommit", "opencode", "lazygit" }, ft) then
 					vim.b[buf].minuet_virtual_text_auto_trigger = true
 				end
 			end
