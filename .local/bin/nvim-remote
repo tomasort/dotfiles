@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Attach a local Neovim UI (--remote-ui) to a Neovim instance on a remote host,
+# VS Code Remote style: plugins, LSP, grep and file IO all run on the remote
+# machine, only the UI is local, so typing and redraws feel native.
+#
+# usage: nvim-remote <host> [remote-dir] [port]
+set -euo pipefail
+
+host="${1:?usage: nvim-remote <host> [remote-dir] [port]}"
+dir="${2:-.}"
+port="${3:-${NVIM_REMOTE_PORT:-7777}}"
+
+die() { printf 'nvim-remote: %s\n' "$1" >&2; exit 1; }
+
+command -v nvim >/dev/null || die "local nvim not found"
+command -v ssh >/dev/null || die "ssh not found"
+
+# 1. start (or reuse) a headless nvim server on the remote, in $dir, bound to
+#    the remote loopback only so nothing is exposed beyond the ssh tunnel.
+ssh -o BatchMode=no "$host" bash -s -- "$port" "$dir" <<'REMOTE' || die "remote setup failed on $host"
+set -euo pipefail
+port="$1"
+dir="$2"
+command -v nvim >/dev/null || { echo "nvim is not installed on this host" >&2; exit 1; }
+cd "$dir" 2>/dev/null || { echo "cannot cd to '$dir'" >&2; exit 1; }
+
+alive() { nvim --headless --server "127.0.0.1:$port" --remote-expr '1' >/dev/null 2>&1; }
+
+if ! alive; then
+  nohup nvim --headless --listen "127.0.0.1:$port" >"/tmp/nvim-remote-$port.log" 2>&1 &
+  for _ in $(seq 1 50); do
+    alive && exit 0
+    sleep 0.1
+  done
+  echo "remote nvim server did not come up on port $port (see /tmp/nvim-remote-$port.log)" >&2
+  exit 1
+fi
+REMOTE
+
+# 2. forward the remote loopback port to this machine.
+tunnel_pid=""
+cleanup() { [[ -n "$tunnel_pid" ]] && kill "$tunnel_pid" 2>/dev/null || true; }
+trap cleanup EXIT
+
+reaches() { nc -z 127.0.0.1 "$port" >/dev/null 2>&1; }
+
+if ! reaches; then
+  ssh -N -o ExitOnForwardFailure=yes -L "$port:127.0.0.1:$port" "$host" &
+  tunnel_pid=$!
+  for _ in $(seq 1 50); do
+    reaches && break
+    sleep 0.1
+  done
+  reaches || die "ssh tunnel to $host:$port failed"
+fi
+
+# 3. attach the local UI to the remote editor.
+exec nvim --server "127.0.0.1:$port" --remote-ui

@@ -1,0 +1,54 @@
+-- distant.nvim: VS Code Remote-style editing of files on a remote machine.
+--
+-- NOT INSTALLED YET, on purpose. Everything below is commented out and the file
+-- returns an empty spec, so lazy.nvim sees nothing to download. Uncomment the
+-- block (and delete the `return {}`) when you want to try it.
+--
+-- Why you might want it: edits files, runs commands and opens terminals on a
+-- remote host while your local nvim stays the UI. In `mode = "ssh"` it needs
+-- nothing installed on the remote and honours ~/.ssh/config plus ssh password
+-- prompts. In `mode = "distant"` it also runs a distant server remotely (more
+-- features, but the hostname must be resolvable outside ssh, so ssh-config
+-- aliases stop working).
+--
+-- Trade-off vs. the nvim --remote-ui route (see lua/remote.lua): distant is
+-- more comfortable for editing individual remote files, but LSP still runs
+-- locally. --remote-ui runs *everything* remotely, which is what you want for
+-- big projects, at the cost of a fiddlier setup.
+--
+-- Setup if you enable it:
+--   1. `:DistantInstall` to fetch the local helper library.
+--   2. Only for mode = "distant":
+--        curl -L https://sh.distant.dev | sh -s -- --on-conflict overwrite
+--      on the remote host (ansible could do this).
+--
+-- return {
+-- 	{
+-- 		"chipsenkbeil/distant.nvim",
+-- 		branch = "v0.3",
+-- 		cmd = { "DistantLaunch", "DistantConnect", "DistantOpen", "DistantTerminal" },
+-- 		keys = {
+-- 			{ "<leader>rc", "<Cmd>DistantConnect ssh://<C-r>=expand('%:h')<CR><CR>", desc = "Distant: connect" },
+-- 			{ "<leader>rl", "<Cmd>DistantLaunch<CR>", desc = "Distant: launch" },
+-- 			{ "<leader>rt", "<Cmd>DistantTerminal<CR>", desc = "Distant: terminal" },
+-- 		},
+-- 		config = function()
+-- 			require("distant").setup({
+-- 				-- ssh mode: no remote install needed, ssh handles auth and
+-- 				-- ~/.ssh/config aliases; distant mode needs the server remotely.
+-- 				servers = {
+-- 					["*"] = {
+-- 						mode = "ssh",
+-- 						connect = {
+-- 							default = {
+-- 								scheme = "ssh",
+-- 							},
+-- 						},
+-- 					},
+-- 				},
+-- 			})
+-- 		end,
+-- 	},
+-- }
+
+return {}

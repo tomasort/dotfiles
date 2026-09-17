@@ -25,3 +25,4 @@ vim.opt.undoreload = 100000
 require("config.lazy")
 require("config.keymaps")
 require("config.autocmds")
+require("remote")
