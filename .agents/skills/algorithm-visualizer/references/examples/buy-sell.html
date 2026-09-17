@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0b0f14; }
+      body { font-family: "Inter", system-ui, sans-serif; color: #e2e8f0; }
+      code, pre { font-family: "JetBrains Mono", monospace; }
+
+      #root {
+        position: relative; width: 1920px; height: 1080px; overflow: hidden;
+        background: radial-gradient(1200px 700px at 30% -10%, #16233b 0%, #0b0f14 60%);
+      }
+      #scene { position: absolute; inset: 0; }
+
+      #title {
+        position: absolute; top: 30px; left: 0; width: 1920px; text-align: center;
+        font-size: 36px; font-weight: 700; letter-spacing: 0.4px;
+      }
+      #title .sub {
+        font-size: 19px; line-height: 22px; color: #94a3b8; font-weight: 400; margin-top: 4px;
+      }
+
+      #codePanel {
+        position: absolute; left: 100px; top: 104px; width: 900px;
+        background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 18px 24px;
+      }
+      #codePanel .panelLabel { font-size: 15px; line-height: 18px; color: #94a3b8; margin-bottom: 10px; letter-spacing: 1px; }
+      #codePanel .row {
+        position: relative; font-family: "JetBrains Mono", monospace; font-size: 20px;
+        line-height: 40px; color: #e2e8f0; padding-left: 8px; white-space: pre; z-index: 2;
+      }
+      #codePanel .row .ln { display: inline-block; width: 32px; color: #a8b3c4; user-select: none; }
+      #codePanel .row .comment { color: #94a3b8; }
+      #codePanel .row .kw { color: #60a5fa; }
+      #hl {
+        position: absolute; left: 8px; top: 48px; width: 6px; height: 40px; border-radius: 3px;
+        background: #60a5fa; box-shadow: 0 0 12px rgba(96, 165, 250, 0.7); z-index: 1;
+      }
+
+      #vars {
+        position: absolute; left: 100px; top: 852px; width: 900px;
+        background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 14px 24px;
+        display: flex; justify-content: space-between;
+      }
+      .varBox { text-align: center; }
+      .varBox .name { font-size: 15px; color: #94a3b8; font-family: "JetBrains Mono", monospace; }
+      .varBox .val { display: block; margin-top: 2px; font-size: 30px; font-weight: 700; font-family: "JetBrains Mono", monospace; color: #fbbf24; }
+      .varBox .val.green { color: #4ade80; }
+
+      #chartLabel { position: absolute; top: 104px; left: 1080px; font-size: 17px; color: #94a3b8; font-family: "JetBrains Mono", monospace; letter-spacing: 1px; }
+      #axis { position: absolute; left: 1080px; right: 120px; top: 900px; height: 2px; background: #334155; }
+      .bar {
+        position: absolute; bottom: 180px; width: 70px;
+        transform-origin: bottom center; border-radius: 6px 6px 0 0; background: #334155;
+      }
+      .priceLabel { position: absolute; width: 70px; text-align: center; font-size: 20px; font-weight: 700; color: #e2e8f0; z-index: 5; }
+      .dayLabel { position: absolute; top: 925px; width: 70px; text-align: center; font-size: 15px; color: #a8b3c4; }
+      .cursor {
+        position: absolute; top: 360px; width: 3px; height: 540px; background: #f8fafc;
+        border-radius: 2px; box-shadow: 0 0 14px rgba(248, 250, 252, 0.55); opacity: 0; z-index: 4;
+      }
+      .badge {
+        position: absolute; width: 100px; text-align: center; font-size: 19px; font-weight: 700;
+        padding: 4px 0; border-radius: 8px; opacity: 0; z-index: 6;
+      }
+      .badge.buy { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 2px solid #22c55e; }
+      .badge.sell { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 2px solid #ef4444; }
+      .badge.hit { background: rgba(96, 165, 250, 0.2); color: #60a5fa; border: 2px solid #60a5fa; }
+
+      #explain {
+        position: absolute; left: 1080px; top: 960px; width: 720px; min-height: 84px;
+        font-size: 22px; line-height: 1.4; color: #f8fafc;
+      }
+      #explain code { background: #1e293b; padding: 2px 8px; border-radius: 6px; font-size: 20px; }
+      #totalBadge { position: absolute; top: 1020px; left: 1080px; font-size: 28px; font-weight: 700; color: #fbbf24; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <!-- =====================================================================
+         TEMPLATE: edit CONFIG and STEPS in the <script> at the bottom only.
+         Layout, colors, and the timeline builder below are framework.
+         ===================================================================== -->
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+    >
+      <section id="scene" class="clip" data-start="0" data-duration="18" data-track-index="1">
+        <div id="title"></div>
+
+        <div id="codePanel">
+          <div class="panelLabel">CODE</div>
+          <div id="hl"></div>
+          <!-- rows are generated from CONFIG.code by the builder -->
+        </div>
+
+        <div id="vars">
+          <!-- varBox elements are generated from CONFIG.vars by the builder -->
+        </div>
+
+        <div id="chartLabel"></div>
+        <div id="axis"></div>
+
+        <!-- bars / priceLabels / dayLabels / cursors / badges are generated
+             from CONFIG and STEPS by the builder -->
+
+        <div id="explain"></div>
+        <div id="totalBadge"></div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // =====================================================================
+      // CONFIG — EDIT ME
+      // =====================================================================
+      const CONFIG = {
+        title: "Best Time to Buy &amp; Sell Stock II",
+        subtitle: "buy low, sell high — trade as many times as you like",
+        values: [7, 1, 5, 3, 6, 4],
+        chartLabel: "prices = [7, 1, 5, 3, 6, 4]",
+        code: [
+          "def maxProfit(prices):",
+          "    local_min = prices[0]",
+          "    local_max = prices[0]",
+          "    max_profit = 0",
+          "    i = 0",
+          "    while i < len(prices) - 1:",
+          "        while i < len(prices)-1 and prices[i] >= prices[i+1]:",
+          "            i += 1",
+          "        local_min = prices[i]   # buy",
+          "        while i < len(prices)-1 and prices[i] <= prices[i+1]:",
+          "            i += 1",
+          "        local_max = prices[i]   # sell",
+          "        max_profit += local_max - local_min",
+          "    return max_profit",
+        ],
+        vars: ["i", "local_min", "local_max", "max_profit"],
+        // default bar colors used during scanning (recolored per step via STEPS.bars)
+        barColors: ["#334155", "#334155", "#334155", "#334155", "#334155", "#334155"],
+        introExplain: "Trace this algorithm step by step — watch the code highlight, the variables, and the bars.",
+        finalExplain: "<b>return max_profit</b> &rarr; 7",
+        finalBadge: "&radic; max_profit = 7",
+      };
+
+      // =====================================================================
+      // STEPS — EDIT ME. One entry per visible change, `at` in seconds.
+      // last `at` + 2 must equal the root data-duration.
+      // =====================================================================
+      const STEPS = [
+        { at: 0.8, explain: "Define maxProfit(prices)" },
+        { at: 1.6, line: 0, explain: "<b>1</b> &nbsp;define maxProfit(prices)" },
+        { at: 2.4, line: 1, vars: { local_min: 7 }, explain: "<b>2</b> &nbsp;local_min = 7" },
+        { at: 3.2, line: 2, vars: { local_max: 7 }, explain: "<b>3</b> &nbsp;local_max = 7" },
+        { at: 4.0, line: 3, vars: { max_profit: 0 }, explain: "<b>4</b> &nbsp;max_profit = 0" },
+        { at: 4.8, line: 4, vars: { i: 0 }, cursor: 0, explain: "<b>5</b> &nbsp;i = 0 — start at day 0" },
+        { at: 5.6, line: 5, explain: "<b>6</b> &nbsp;0 &lt; 5 &rarr; true. Enter loop." },
+        { at: 6.4, line: 6, bars: { 0: "#60a5fa" }, explain: "<b>7</b> &nbsp;7 &ge; 1 &rarr; true. Falling." },
+        { at: 7.2, line: 7, vars: { i: 1 }, cursor: 1, explain: "<b>8</b> &nbsp;i = 1" },
+        { at: 8.0, line: 6, bars: { 1: "#60a5fa" }, explain: "<b>7</b> &nbsp;1 &ge; 5 &rarr; false. Stop." },
+        { at: 8.8, line: 8, bars: { 1: "#22c55e" }, vars: { local_min: 1 }, badges: { buy1: true }, fade: ["pl1"], explain: "<b>9</b> &nbsp;BUY at day 1" },
+        { at: 9.6, line: 9, bars: { 1: "#f59e0b" }, explain: "<b>10</b> &nbsp;1 &le; 5 &rarr; true. Rising." },
+        { at: 10.4, line: 10, vars: { i: 2 }, cursor: 2, explain: "<b>11</b> &nbsp;i = 2" },
+        { at: 11.2, line: 9, bars: { 2: "#f59e0b" }, explain: "<b>10</b> &nbsp;5 &le; 3 &rarr; false. Stop." },
+        { at: 12.0, line: 11, bars: { 2: "#ef4444" }, vars: { local_max: 5 }, badges: { sell2: true }, fade: ["pl2"], explain: "<b>12</b> &nbsp;SELL at day 2" },
+        { at: 12.8, line: 12, vars: { max_profit: 4 }, explain: "<b>13</b> &nbsp;profit += 5 &minus; 1 = 4" },
+        { at: 13.6, line: 5, explain: "<b>6</b> &nbsp;2 &lt; 5 &rarr; true." },
+        { at: 14.4, line: 6, bars: { 0: "#475569", 1: "#475569" }, explain: "done bars dimmed" },
+        { at: 14.8, line: 8, bars: { 3: "#22c55e" }, vars: { local_min: 3 }, badges: { buy3: true }, fade: ["pl3"], cursor: 3, explain: "<b>9</b> &nbsp;BUY at day 3" },
+        { at: 15.2, line: 11, bars: { 4: "#ef4444" }, vars: { local_max: 6 }, badges: { sell4: true }, fade: ["pl4"], cursor: 4, explain: "<b>12</b> &nbsp;SELL at day 4" },
+        { at: 15.6, line: 12, vars: { max_profit: 7 }, explain: "<b>13</b> &nbsp;profit += 6 &minus; 3 = 7" },
+        { at: 16.0, line: 13, vars: { max_profit: 7 }, explain: CONFIG.finalExplain, final: true },
+      ];
+
+      // =====================================================================
+      // BUILDER — framework; do not edit below unless extending the template.
+      // =====================================================================
+      const ROW_H = 40;
+      const MAX_H = 460;
+      const CHART_LEFT = 1080;
+      const BAR_W = 70;
+      const BAR_GAP = 30;
+      const N = CONFIG.values.length;
+      const maxVal = Math.max(...CONFIG.values);
+      const H = CONFIG.values.map((v) => Math.round((v / maxVal) * MAX_H));
+      const LEFT = CONFIG.values.map((_, i) => 1180 + i * (BAR_W + BAR_GAP));
+      const CX = LEFT.map((l) => l + BAR_W / 2);
+
+      const scene = document.getElementById("scene");
+      const title = document.getElementById("title");
+      const codePanel = document.getElementById("codePanel");
+      const varsEl = document.getElementById("vars");
+      const chartLabel = document.getElementById("chartLabel");
+      const explain = document.getElementById("explain");
+      const totalBadge = document.getElementById("totalBadge");
+      const hl = document.getElementById("hl");
+
+      title.innerHTML = CONFIG.title + '<div class="sub">' + CONFIG.subtitle + "</div>";
+      chartLabel.textContent = CONFIG.chartLabel;
+
+      // ---- code rows ----
+      const codeRows = [];
+      CONFIG.code.forEach((src, idx) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = '<span class="ln">' + (idx + 1) + "</span>" + src;
+        codePanel.appendChild(row);
+        codeRows.push(row);
+      });
+
+      // ---- variable boxes ----
+      const varEls = {};
+      CONFIG.vars.forEach((name) => {
+        const box = document.createElement("div");
+        box.className = "varBox";
+        box.innerHTML = '<span class="name">' + name + '</span><span class="val" id="var_' + name + '">&ndash;</span>';
+        varsEl.appendChild(box);
+        varEls[name] = box.querySelector(".val");
+      });
+
+      // ---- bars, labels, cursors, badges ----
+      CONFIG.values.forEach((v, i) => {
+        const bar = document.createElement("div");
+        bar.id = "bar" + i;
+        bar.className = "bar";
+        bar.style.height = H[i] + "px";
+        bar.style.left = LEFT[i] + "px";
+        scene.appendChild(bar);
+
+        const pl = document.createElement("div");
+        pl.id = "pl" + i;
+        pl.className = "priceLabel";
+        pl.style.left = LEFT[i] + "px";
+        pl.style.top = 900 - H[i] - 46 + "px";
+        pl.textContent = "$" + v;
+        scene.appendChild(pl);
+
+        const day = document.createElement("div");
+        day.className = "dayLabel";
+        day.style.left = LEFT[i] + "px";
+        day.textContent = "d" + i;
+        scene.appendChild(day);
+      });
+
+      const cursors = {};
+      const cursorIdx = new Set();
+      STEPS.forEach((s) => { if (s.cursor !== undefined) cursorIdx.add(s.cursor); });
+      cursorIdx.forEach((i) => {
+        const c = document.createElement("div");
+        c.className = "cursor";
+        c.id = "cursor" + i;
+        c.style.left = CX[i] + "px";
+        scene.appendChild(c);
+        cursors[i] = c;
+      });
+
+      const badges = {};
+      const badgeDefs = {};
+      STEPS.forEach((s) => {
+        if (!s.badges) return;
+        Object.keys(s.badges).forEach((id) => {
+          const pair = id.match(/^(buy|sell|hit)(\d+)$/);
+          const cls = pair ? pair[1] : "hit";
+          const idx = parseInt(pair ? pair[2] : "0", 10);
+          badgeDefs[id] = { idx, cls };
+          if (!badges[id]) {
+            const b = document.createElement("div");
+            b.id = id;
+            b.className = "badge " + cls;
+            b.style.left = LEFT[idx] - (100 - BAR_W) / 2 + "px";
+            b.style.top = 900 - H[idx] - 46 + "px";
+            b.textContent = id.replace(/\d+$/, "").toUpperCase();
+            scene.appendChild(b);
+            badges[id] = b;
+          }
+        });
+      });
+
+      // ---- helpers ----
+      const ex = (html, t) => tl.call(() => { explain.innerHTML = html; }, [], t);
+      const setVar = (name, val, t) => tl.call(() => { varEls[name].textContent = val; }, [], t);
+      const line = (k, t, dur) => tl.to(hl, { y: k * ROW_H, duration: dur || 0.25, ease: "power2.out" }, t);
+      const barCol = (i, c, t, dur) => tl.to("#bar" + i, { backgroundColor: c, duration: dur || 0.25 }, t);
+      const cursorTo = (i, t, dur) => {
+        if (!cursors[i]) return;
+        Object.keys(cursors).forEach((k) => {
+          if (k != i) tl.to("#cursor" + k, { opacity: 0, duration: 0.2 }, t);
+        });
+        tl.to("#cursor" + i, { opacity: 1, duration: 0.2 }, t);
+      };
+      const fade = (sel, t) => tl.to(sel, { opacity: 0, duration: 0.25 }, t);
+      const showBadge = (id, t) => tl.to("#" + id, { opacity: 1, duration: 0.25 }, t);
+
+      // ---- intro ----
+      tl.fromTo("#title", { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0);
+      tl.fromTo("#vars", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.2);
+      CONFIG.values.forEach((_, i) => {
+        tl.fromTo("#bar" + i, { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: "power2.out" }, 0.7 + i * 0.08);
+      });
+      ex(CONFIG.introExplain, 0.6);
+
+      // ---- steps ----
+      const lastAt = STEPS[STEPS.length - 1].at;
+      STEPS.forEach((s) => {
+        const t = s.at;
+        if (s.line !== undefined) line(s.line, t);
+        if (s.explain) ex(s.explain, t);
+        if (s.vars) Object.keys(s.vars).forEach((k) => setVar(k, s.vars[k], t));
+        if (s.bars) Object.keys(s.bars).forEach((i) => barCol(parseInt(i, 10), s.bars[i], t));
+        if (s.cursor !== undefined) cursorTo(s.cursor, t);
+        if (s.fade) s.fade.forEach((id) => fade("#" + id, t));
+        if (s.badges) Object.keys(s.badges).forEach((id) => showBadge(id, t));
+        if (s.final) {
+          tl.to("#totalBadge", { opacity: 1, duration: 0.4 }, t);
+          Object.keys(cursors).forEach((k) => tl.to("#cursor" + k, { opacity: 0, duration: 0.4 }, t));
+        }
+      });
+      totalBadge.innerHTML = CONFIG.finalBadge;
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
