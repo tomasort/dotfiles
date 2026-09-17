@@ -7,3 +7,4 @@
 
 # Local secrets (sourced by .zshrc, never committed)
 .zshrc.local
+.agents/.skill-lock.json
