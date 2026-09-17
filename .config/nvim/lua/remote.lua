@@ -54,27 +54,47 @@ local function pick(items, prompt, cb)
 	})
 end
 
-local function remote_dirs(host)
+local function notify(msg, level)
+	local ok, snacks = pcall(require, "snacks")
+	if ok and snacks.notify then
+		snacks.notify(msg, { level = level })
+	else
+		vim.notify(msg, vim.log.levels[level == "error" and 4 or 2] or vim.log.levels.INFO)
+	end
+end
+
+local function remote_dirs(host, cb)
+	notify("Listing directories on " .. host .. "…", "info")
 	local cmd = string.format(
 		"ssh -o BatchMode=yes %q 'fd -t d -d 2 . \"$HOME\" 2>/dev/null || find \"$HOME\" -maxdepth 2 -type d 2>/dev/null'",
 		host
 	)
-	local out = vim.fn.systemlist(cmd)
-	-- keep only directories that actually exist remotely (systemlist returns an
-	-- error line when the ssh call fails)
-	if vim.v.shell_error ~= 0 or #out == 0 then
-		return {}
-	end
-	local dirs = {}
-	for _, d in ipairs(out) do
-		if d ~= "" then
-			if d:sub(1, 1) ~= "/" then
-				d = "$HOME/" .. d
+	local out = {}
+	vim.fn.jobstart(cmd, {
+		stdout_buffered = true,
+		on_stdout = function(_, data)
+			for _, d in ipairs(data or {}) do
+				if d ~= "" then
+					if d:sub(1, 1) ~= "/" then
+						d = "$HOME/" .. d
+					end
+					out[#out + 1] = d
+				end
 			end
-			dirs[#dirs + 1] = d
-		end
-	end
-	return dirs
+		end,
+		on_exit = function(_, code)
+			if code ~= 0 or #out == 0 then
+				notify(
+					"Could not list directories on " .. host .. " (keys only?)." ..
+						" You can still type a path manually.",
+					"warn"
+				)
+				cb({})
+			else
+				cb(out)
+			end
+		end,
+	})
 end
 
 local function attach(host, dir)
@@ -97,20 +117,21 @@ function M.pick()
 		if not host or host == "" then
 			return
 		end
-		local dirs = remote_dirs(host)
-		dirs[#dirs + 1] = "✎ type a path manually…"
+		remote_dirs(host, function(dirs)
+			dirs[#dirs + 1] = "✎ type a path manually…"
 
-		pick(dirs, "remote dir", function(dir)
-			if not dir then
-				return
-			end
-			if dir:find("^✎") then
-				ui_input("remote dir [$HOME]: ", "$HOME", function(typed)
-					attach(host, typed or "$HOME")
-				end)
-			else
-				attach(host, dir)
-			end
+			pick(dirs, "remote dir", function(dir)
+				if not dir then
+					return
+				end
+				if dir:find("^✎") then
+					ui_input("remote dir [$HOME]: ", "$HOME", function(typed)
+						attach(host, typed or "$HOME")
+					end)
+				else
+					attach(host, dir)
+				end
+			end)
 		end)
 	end
 
