@@ -10,14 +10,10 @@ return {
 		"erooke/blink-cmp-latex",
 		-- Maven/Gradle dependency completion (requires curl)
 		"Mestane/blink-cmp-deps",
-		-- environment variable completion ($ trigger)
-		"bydlw98/blink-cmp-env",
 		-- WordNet dictionary/thesaurus completion
 		"archie-judd/blink-cmp-words",
 		-- conventional commit types (gitcommit buffers)
 		"disrupted/blink-cmp-conventional-commits",
-		-- register contents
-		"phanen/blink-cmp-register",
 		-- spellcheck suggestions (spellsuggest)
 		"ribru17/blink-cmp-spell",
 		-- whole-project word completion via ripgrep/git grep
@@ -36,7 +32,7 @@ return {
 		-- 'super-tab' for mappings similar to vscode (tab to accept)
 		-- 'enter' for enter to accept
 		keymap = {
-			preset = "default",
+			preset = "super-tab",
 			-- <CR> accepts ONLY when an item has been explicitly
 			-- selected (Up/Down/<C-n>/<C-p>); otherwise falls through to a
 			-- normal newline. Requires completion.list.selection.preselect
@@ -123,9 +119,7 @@ return {
 				"snippets",
 				"buffer",
 				"css_vars",
-				"env",
 				"ripgrep",
-				"register",
 				"spell",
 				"conventional_commits",
 			},
@@ -137,10 +131,6 @@ return {
 					-- git grep backend where available (faster + respects
 					-- tracked files), falls back to rg
 					opts = { backend = { use = "gitgrep-or-ripgrep" } },
-				},
-				register = {
-					name = "Register",
-					module = "blink-cmp-register",
 				},
 				spell = {
 					name = "Spell",
@@ -178,17 +168,6 @@ return {
 				thesaurus = {
 					name = "Thesaurus",
 					module = "blink-cmp-words.thesaurus",
-				},
-				env = {
-					-- completes your actual shell env vars; triggers on "$"
-					-- so it stays out of the way otherwise
-					name = "Env",
-					module = "blink-cmp-env",
-					opts = {
-						item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
-						show_braces = false,
-						show_documentation_window = true,
-					},
 				},
 				css_vars = {
 					name = "css-vars",

@@ -69,4 +69,39 @@ return {
 			})
 		end,
 	},
+	{
+		-- Live browser/webview preview of the *finished* page (the one thing
+		-- render-markdown can't do): GitHub-style CSS, KaTeX math, Mermaid
+		-- diagrams, synced scrolling. Rendered by a Deno sidecar process.
+		-- Requires deno on PATH. app='webview' (default) opens a native
+		-- window titled "Peek preview"; set app='browser' if you'd rather
+		-- not rely on the webview binary.
+		"toppair/peek.nvim",
+		event = "VeryLazy",
+		build = "deno task --quiet build:fast",
+		opts = {
+			-- preview opens with the editor's colours; dark to match the
+			-- kanagawa terminal
+			theme = "dark",
+			-- peek's renderer is markdown-it configured with html=true, so it
+			-- passes raw HTML through untouched. Extending the filetype gate
+			-- therefore gives simple static .html pages a preview too. It is
+			-- still a markdown renderer: peek's own GitHub-markdown CSS wraps
+			-- the page, and any markdown-ish characters in the source are
+			-- still parsed, so keep it to simple markup.
+			filetype = { "markdown", "html" },
+		},
+		config = function(_, opts)
+			require("peek").setup(opts)
+			vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+			vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+			vim.keymap.set("n", "<leader>mp", function()
+				if require("peek").is_open() then
+					require("peek").close()
+				else
+					require("peek").open()
+				end
+			end, { desc = "Toggle Markdown/HTML preview" })
+		end,
+	},
 }

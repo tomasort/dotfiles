@@ -235,7 +235,17 @@ return {
 				html = {},
 				jdtls = {},
 				texlab = {},
-				pylsp = {},
+				pylsp = {
+				settings = {
+					pylsp = {
+						plugins = {
+							pyflakes = { enabled = false }, -- ruff covers these checks
+							pycodestyle = { enabled = false },
+							ruff = { enabled = false }, -- diagnostics come from the ruff server itself
+						},
+					},
+				},
+			},
 				-- nvim 0.12's built-in vim.lsp.document_color highlights
 				-- tailwind color class names with their real color as
 				-- background on LspAttach — no colorizer plugin needed

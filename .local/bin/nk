@@ -1,0 +1,9 @@
+#!/bin/sh
+# Register a venv as a Jupyter kernel: nk <path-to-venv> <kernel-name>
+#   nk .venv myproject
+# Requires uv (for the ipykernel install) and the venv to exist.
+set -e
+[ $# -eq 2 ] || { echo "usage: nk <venv-path> <kernel-name>" >&2; exit 1; }
+uv pip install --python "$1/bin/python" -q ipykernel
+"$1/bin/python" -m ipykernel install --user --name "$2" --display-name "$2" >/dev/null
+echo "kernel '$2' added"

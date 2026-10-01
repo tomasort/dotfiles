@@ -1,0 +1,29 @@
+return {
+	-- -- Disabled for now — try jupynium first; flip to true to bring back
+	-- -- terminal-only cells (molten) alongside the browser sync.
+	-- {
+	-- 	"benlubas/molten-nvim",
+	-- 	version = "^1.0.0",
+	-- 	enabled = false,
+	-- },
+	-- {
+	-- 	-- Neovim-in-the-browser: edits a *.ju.py (or *.md) and syncs it to a
+	-- 	-- JupyterLab tab in real time. Good for interactive plots/widgets.
+	-- 	-- Uses the global `jupynium` CLI (uv tool install) and Brave.
+	-- 	-- Workflow: open a *.ju.py file and Jupynium auto-attaches; or
+	-- 	-- :JupyniumStartAndAttachToServerOrAttachToExistingServer.
+	-- 	"kiyoon/jupynium.nvim",
+	-- 	init = function()
+	-- 		-- Brave (Chromium) via CDP; Firefox is the jupynium default.
+	-- 		vim.g.jupynium_browser_startcmd =
+	-- 			"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser --remote-debugging-port=9222 --no-first-run --no-default-browser-check"
+	-- 	end,
+	-- 	opts = {
+	-- 		-- Defaults keep these off (only auto-attach, so save = no-op
+	-- 		-- until you ran :JupyniumStartAndAttachToServer manually).
+	-- 		-- *.ju.* files start the server + sync on open.
+	-- 		auto_start_server = { enable = true, file_pattern = { "*.ju.*" } },
+	-- 		auto_start_sync = { enable = true, file_pattern = { "*.ju.*" } },
+	-- 	},
+	-- },
+}

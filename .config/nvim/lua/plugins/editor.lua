@@ -4,7 +4,50 @@ return {
 		"nmac427/guess-indent.nvim",
 		opts = {},
 	},
-	{ "chrisbra/csv.vim" },
+	{
+		-- Modern fold UI: treesitter (fallback indent) fold ranges, a chevron
+		-- fold column, and `K` to peek a folded region. ufo owns foldmethod —
+		-- it ends up `manual` — so no foldmethod/foldexpr is set anywhere.
+		-- foldlevel/foldlevelstart stay in init.lua.
+		"kevinhwang91/nvim-ufo",
+		dependencies = { "kevinhwang91/promise-async" },
+		-- Not lazy-loadable: ufo only attaches on BufWinEnter (no retroactive
+		-- attach), so loading after the first buffer is already on screen
+		-- leaves it unfolded until the next edit. It must be up first.
+		lazy = false,
+		init = function()
+			vim.o.foldcolumn = "1"
+			vim.o.foldenable = true
+			-- fillchars: down-chevron for open folds, right-chevron for closed
+			-- (Nerd Font; written as codepoints so this file stays ASCII)
+			local open, close = vim.fn.nr2char(0xf47c), vim.fn.nr2char(0xf460)
+			vim.o.fillchars = ("eob: ,fold: ,foldopen:%s,foldsep: ,foldinner: ,foldclose:%s"):format(open, close)
+		end,
+		opts = {
+			-- treesitter where a parser exists, ufo's own indent provider
+			-- otherwise (so no language ends up unfoldable)
+			provider_selector = function()
+				return { "treesitter", "indent" }
+			end,
+		},
+		keys = {
+			-- built-in zR/zM only change foldlevel, which ufo keeps at 99;
+			-- these APIs close/open the folds themselves
+			{ "zR", function() require("ufo").openAllFolds() end, desc = "Open all folds" },
+			{ "zM", function() require("ufo").closeAllFolds() end, desc = "Close all folds" },
+			{ "zr", function() require("ufo").openFoldsExceptKinds() end, desc = "Open folds except kinds" },
+			{ "zm", function() require("ufo").closeFoldsWith() end, desc = "Close folds by kind" },
+			{
+				"K",
+				function()
+					if not require("ufo").peekFoldedLinesUnderCursor() then
+						vim.lsp.buf.hover()
+					end
+				end,
+				desc = "Peek fold (or LSP hover)",
+			},
+		},
+	},
 	{
 		"lervag/vimtex",
 		init = function()
