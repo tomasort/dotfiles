@@ -11,6 +11,10 @@ end
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 
+-- Python provider (pynvim) lives in the jupyter venv; required for
+-- remote plugins like molten-nvim.
+vim.g.python3_host_prog = vim.fn.expand("~/.venvs/jupyter/bin/python")
+
 -- Persistent undo history
 local undodir = vim.fn.expand("~/.vim/undodir")
 if vim.fn.isdirectory(undodir) == 0 then

@@ -838,7 +838,16 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 #          command identifiers and filters is available under
 #          :ref:`terminal-shortcuts-list`.
 #  Default: []
-# c.TerminalInteractiveShell.shortcuts = []
+# Ctrl+Space accepts the history autosuggestion (ghost text), like zsh's
+#  bindkey '^@' autosuggest-accept
+c.TerminalInteractiveShell.shortcuts = [
+    {
+        "command": "IPython:auto_suggest.accept",
+        "new_keys": ["c-space"],
+        "new_filter": "has_suggestion & default_buffer_focused & emacs_like_insert_mode",
+        "create": True,
+    },
+]
 
 # Show rewritten input, e.g. for autocall.
 #  See also: InteractiveShell.show_rewritten_input

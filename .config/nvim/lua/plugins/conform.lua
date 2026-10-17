@@ -9,7 +9,7 @@ return {
 			{
 				"<leader>cf",
 				function()
-					require("conform").format()
+					require("conform").format({ timeout_ms = 3000 })
 				end,
 				desc = "Conform: Format file",
 			},
@@ -28,7 +28,9 @@ return {
 			},
 			format_on_save = {
 				-- These options will be passed to conform.format()
-				timeout_ms = 500,
+				-- isort + black each cold-start a Python interpreter, so the
+				-- budget needs headroom (500ms made black "time out" on save)
+				timeout_ms = 3000,
 				lsp_format = "fallback",
 			},
 			notify_on_error = true,

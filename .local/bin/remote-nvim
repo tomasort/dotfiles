@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+# tmux-sessionizer-style launcher for remote neovim: the picker runs FIRST and
+# only then is a tmux session created, named after the host you picked, with an
+#   remote-nvim            from zsh, or from nvim (:RemoteUI / <leader>ru)
+#   remote-nvim __pick <result-file>       internal: interactive picker
+#   remote-nvim __attach <host> [dir] [port]   internal: start remote editor
+#                                              + tunnel + local UI attach
+#
+# Interactive phases use the current terminal when it has a tty, and a tmux
+# popup (which provides its own pty) when it doesn't — so it also works from
+# inside a running nvim.
+set -euo pipefail
+
+SELF="${BASH_SOURCE[0]}"
+result_file=""; pass_file=""
+cleanup() {
+	[[ -n ${pass_file:-} && -e $pass_file ]] && rm -f "$pass_file"
+	[[ -n ${result_file:-} && -e $result_file ]] && rm -f "$result_file"
+}
+die() { printf '%s\n' "$1" >&2; exit 1; }
+trap cleanup EXIT
+
+command -v fzf >/dev/null || die "fzf is required"
+command -v tmux >/dev/null || die "tmux is required"
+
+ctl_path() { printf "/tmp/nvim-remote-%s" "${1//[^A-Za-z0-9._-]/_}"; }
+mktmp_name() { printf 'remote-%.32s' "${1//[^A-Za-z0-9._-]/-}"; }
+q() { printf %q "$1"; } # tmux command strings are parsed by sh -c
+
+# ============================================================== attach phase =
+# internal step: start (or reuse) the remote headless editor, tunnel it, and
+# attach the local UI. Runs as the pane command of the host's tmux session;
+# reuses the master connection the picker already authenticated.
+if [[ ${1:-} == __attach ]]; then
+	host="${2:?}"
+	dir="${3:?}"
+	port="${4:-${NVIM_REMOTE_PORT:-7777}}"
+
+	ssh_opts=(-o BatchMode=no
+		-o ControlMaster=auto
+		-o "ControlPath=$(ctl_path "$host")"
+		-o ControlPersist=yes)
+
+	# 1. headless nvim on the remote, in $dir, bound to remote loopback only
+	ssh "${ssh_opts[@]}" "$host" bash -s -- "$port" "$dir" <<'REMOTE' || die "remote setup failed on $host"
+set -euo pipefail
+port="$1"
+dir="$2"
+command -v nvim >/dev/null || { echo "nvim is not installed on this host" >&2; exit 1; }
+cd "$dir" 2>/dev/null || { echo "cannot cd to '$dir'" >&2; exit 1; }
+
+alive() { nvim --headless --server "127.0.0.1:$port" --remote-expr '1' >/dev/null 2>&1; }
+
+if ! alive; then
+nohup nvim --headless --listen "127.0.0.1:$port" >"/tmp/nvim-remote-$port.log" 2>&1 &
+for _ in $(seq 1 50); do
+alive && exit 0
+sleep 0.1
+done
+echo "remote nvim server did not come up on port $port (see /tmp/nvim-remote-$port.log)" >&2
+exit 1
+fi
+REMOTE
+
+	# 2. forward the remote loopback port to this machine
+	tunnel_pid=""
+	attach_cleanup() {
+		[[ -n "$tunnel_pid" ]] && kill "$tunnel_pid" 2>/dev/null || true
+	}
+	trap attach_cleanup EXIT
+
+	reaches() { nc -z 127.0.0.1 "$port" >/dev/null 2>&1; }
+
+	if ! reaches; then
+		ssh "${ssh_opts[@]}" -N -o ExitOnForwardFailure=yes -L "$port:127.0.0.1:$port" "$host" &
+		tunnel_pid=$!
+		for _ in $(seq 1 50); do
+			reaches && break
+			sleep 0.1
+		done
+		reaches || die "ssh tunnel to $host:$port failed"
+	fi
+
+	# 3. attach the local UI to the remote editor
+	exec nvim --server "127.0.0.1:$port" --remote-ui
+fi
+
+# ============================================================== picker phase =
+# internal step: host → password → master auth → dir, writes "host\ndir" to $2
+if [[ ${1:-} == __pick ]]; then
+	result="${2:?}"
+
+	hosts=()
+	if [[ -f $HOME/.ssh/config ]]; then
+		while IFS= read -r name; do
+			case $name in *[\*\!\?]*|"") ;; *) hosts+=("$name") ;; esac
+		done < <(awk 'tolower($1)=="host"{for(i=2;i<=NF;i++)print $i}' "$HOME/.ssh/config")
+	fi
+
+	host=$(
+		{ printf '%s\n' "${hosts[@]}"; printf '✎ type user@ip\n'; } |
+			sort -u | fzf --reverse --prompt='ssh host> '
+	) || exit 0
+	if [[ $host == ✎* ]]; then
+		printf 'ssh host (user@ip): ' >&2
+		read -r host || exit 0
+	fi
+	[[ -n $host ]] || exit 0
+
+	# optional password; blank = ssh keys only
+	pass_file=$(mktemp /tmp/nvim-remote-pw.XXXXXX) || die 'mktemp failed'
+	chmod 600 "$pass_file"
+	printf 'password for %s (empty = ssh keys): ' "$host" >&2
+	read -rs password || exit 0
+	printf '\n' >&2
+	printf '%s' "$password" >"$pass_file"
+	unset password
+
+	# authenticate once into a master connection (persisted via ssh
+	# ControlMaster); everything below reuses it without re-asking
+	if [[ -n "$password" ]]; then
+		command -v sshpass >/dev/null || die "sshpass is required to use a typed password (brew install sshpass)"
+		SSHPASS="$password" sshpass -e ssh -o BatchMode=no -o ControlMaster=auto \
+			-o "ControlPath=$(ctl_path "$host")" -o ControlPersist=yes \
+			"$host" true || {
+			echo; echo "could not connect to $host:" >&2
+			exit 1
+		}
+	else
+		ssh -o BatchMode=yes -o ControlMaster=no \
+			-o "ControlPath=$(ctl_path "$host")" "$host" true || {
+			# password host without keys: the attach phase asks interactively
+			echo "no ssh key auth for $host; you will be asked in the attach window" >&2
+			printf '%s\n%s\n' "$host" "ASK_IN_ATTACH" >"$result"
+			exit 0
+		}
+	fi
+
+	# list directories on the host over the (already authenticated) master
+	echo "scanning directories on $host…" >&2
+	listing=$(
+		ssh -o BatchMode=yes -o ConnectTimeout=10 -o ControlMaster=no \
+			-o "ControlPath=$(ctl_path "$host")" "$host" \
+			'fd -t d -d 2 . "$HOME" 2>/dev/null || find "$HOME" -maxdepth 2 -type d 2>/dev/null' 2>/dev/null
+	) || true
+
+	entries=("\$HOME")
+	while IFS= read -r d; do
+		[[ -z $d ]] && continue
+		case $d in
+		/*) entries+=("$d") ;;
+		*) entries+=("\$HOME/$d") ;;
+		esac
+	done <<<"$listing"
+
+	dir=$(
+		printf '%s\n' "${entries[@]}" | sort -u |
+			fzf --reverse --prompt='remote dir> '
+	) || exit 0
+
+	printf '%s\n%s\n' "$host" "$dir" >"$result"
+	exit 0
+fi
+
+# ============================================================== main phase ==
+# 1. run the picker where a tty can exist: inline shell, or tmux popup
+result_file=$(mktemp)
+if [[ -t 0 ]]; then
+	"$SELF" __pick "$result_file" || exit 0
+else
+	tmux popup -E "$SELF __pick $result_file" -w 80% -h 50%
+fi
+
+# 2. read the pick
+host=$(head -n 1 "$result_file" 2>/dev/null || true)
+dir=$(sed -n '2p' "$result_file" 2>/dev/null || true)
+[[ -n ${host:-} && -n ${dir:-} ]] || exit 0
+
+# 3. session named after the host, running the attach command
+name=$(mktmp_name "$host")
+attach_cmd="exec $SELF __attach $(q "$host") $(q "$dir")"
+
+if tmux has-session -t "$name" 2>/dev/null; then
+	if [[ -n ${TMUX:-} ]]; then
+		tmux switch-client -t "$name"
+	else
+		exec tmux attach -t "$name"
+	fi
+	exit 0
+fi
+
+if [[ -n ${TMUX:-} ]]; then
+	tmux new-session -d -s "$name" "$attach_cmd"
+	tmux switch-client -t "$name"
+else
+	exec tmux new-session -A -s "$name" "$attach_cmd"
+fi
