@@ -11,6 +11,12 @@ return {
         config = function()
             require("oil").setup({
                 default_file_explorer = true,
+                keymaps = {
+                    -- <C-h>/<C-l> are oil defaults (split-select/refresh) that
+                    -- shadow vim-tmux-navigator's window navigation
+                    ["<C-h>"] = false,
+                    ["<C-l>"] = false,
+                },
                 view_options = {
                     show_hidden = true,
                     is_hidden_file = function(name, _)
