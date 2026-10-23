@@ -144,7 +144,7 @@ export PATH="/Applications/IntelliJ IDEA CE.app/Contents/MacOS:$PATH"
 
 export SYSTEM_VERSION_COMPAT=1
 export Path=/usr/local/Cellar/rtmidi/4.0.0:$PATH
-export PATH="/Users/tomasortega/forgit/bin:$PATH"
+export PATH="$HOME/forgit/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 export TZ="America/New_York"
@@ -338,11 +338,11 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Added by codebase-memory-mcp install
-export PATH="/Users/tomasortega/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # opencode
-export PATH=/Users/tomasortega/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
